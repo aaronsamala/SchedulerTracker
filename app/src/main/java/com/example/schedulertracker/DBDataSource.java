@@ -15,7 +15,7 @@ public class DBDataSource {
     // Database fields
     private SQLiteDatabase db;
     private DBHelper dbHelper;
-    private String[] allCommentCols = { DBHelper.COL_COMMENTS_ID,
+    private String[] allCommentCols = { DBHelper.COL_COMMENT_ID,
             DBHelper.COL_COMMENT};
 
 
@@ -37,7 +37,7 @@ public class DBDataSource {
         long insertId = db.insert(DBHelper.TBL_COMMENTS, null,
                 values);
         Cursor cursor = db.query(DBHelper.TBL_COMMENTS,
-                allCommentCols, DBHelper.COL_COMMENTS_ID + " = " + insertId, null,
+                allCommentCols, DBHelper.COL_COMMENT_ID + " = " + insertId, null,
                 null, null, null);
         cursor.moveToFirst();
         Comment newComment = cursorToComment(cursor);
@@ -48,7 +48,7 @@ public class DBDataSource {
     public void deleteComment(Comment comment) {
         long id = comment.getId();
         System.out.println("Comment deleted with id: " + id);
-        db.delete(DBHelper.TBL_COMMENTS, DBHelper.COL_COMMENTS_ID
+        db.delete(DBHelper.TBL_COMMENTS, DBHelper.COL_COMMENT_ID
                 + " = " + id, null);
     }
 
