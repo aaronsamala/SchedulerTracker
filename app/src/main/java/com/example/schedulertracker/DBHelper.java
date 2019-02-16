@@ -15,9 +15,9 @@ public class DBHelper extends SQLiteOpenHelper {
     //Begin Term DB items
     public static final String TBL_TERMS = "terms";
     public static final String COL_TERM_ID = "termID";
-    public static final String COL_TITLE = "title";
-    public static final String COL_START_DATE = "startDate";
-    public static final String COL_END_DATE = "endDate";
+    public static final String COL_TERM_TITLE = "title";
+    public static final String COL_TERM_START_DATE = "startDate";
+    public static final String COL_TERM_END_DATE = "endDate";
     //End Term DB items
 
     private static final String DB_NAME = "schedulertracker.db";
@@ -33,9 +33,9 @@ public class DBHelper extends SQLiteOpenHelper {
             //Begin Term create
             " create table "
                     + TBL_TERMS + "( " + COL_TERM_ID + " integer primary key autoincrement, "
-            + COL_TITLE + " text not null, "
-            + COL_START_DATE + " date not null, "
-            + COL_END_DATE + " date not null, " +
+            + COL_TERM_TITLE + " text not null, "
+            + COL_TERM_START_DATE + " string, "
+            + COL_TERM_END_DATE + " string" +
             ");";
             //End Term create
 
@@ -55,6 +55,8 @@ public class DBHelper extends SQLiteOpenHelper {
                 "Upgrading database from version " + oldVersion + " to "
                         + newVersion + ", which will destroy all old data");
         db.execSQL("DROP TABLE IF EXISTS " + TBL_COMMENTS);
+        db.execSQL("DROP TABLE IF EXISTS " + TBL_TERMS);
+
         onCreate(db);
     }
 }

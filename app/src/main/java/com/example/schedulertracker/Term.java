@@ -4,16 +4,18 @@ import java.util.ArrayList;
 
 public class Term {
     String title;
-    Integer termID, startDate, endDate;
+    String startDate;
+    String endDate;
+    Long termID;
     ArrayList<Course> courses;
     public Term(){
         this.title = "";
-        this.termID = 0;
-        this.startDate = 0;
-        this.endDate = 0;
+        this.termID = 0L;
+        this.startDate = "";
+        this.endDate = "";
         this.courses = new ArrayList<Course>();
     }
-    public Term(String title, Integer termID, Integer startDate, Integer endDate, ArrayList<Course> courses){
+    public Term(String title, Long termID, String startDate, String endDate, ArrayList<Course> courses){
         this.title = title;
         this.termID = termID;
         this.startDate = startDate;
@@ -29,27 +31,27 @@ public class Term {
         this.title = title;
     }
 
-    public Integer getTermID() {
+    public Long getTermID() {
         return termID;
     }
 
-    public void setTermID(Integer termID) {
+    public void setTermID(Long termID) {
         this.termID = termID;
     }
 
-    public Integer getStartDate() {
+    public String getStartDate() {
         return startDate;
     }
 
-    public void setStartDate(Integer startDate) {
+    public void setStartDate(String startDate) {
         this.startDate = startDate;
     }
 
-    public Integer getEndDate() {
+    public String getEndDate() {
         return endDate;
     }
 
-    public void setEndDate(Integer endDate) {
+    public void setEndDate(String endDate) {
         this.endDate = endDate;
     }
 
