@@ -55,7 +55,7 @@ public class DBDataSource {
     public void close() {
         dbHelper.close();
     }
-
+ 
     public Note createNote(String note) {
         ContentValues values = new ContentValues();
         values.put(DBHelper.COL_NOTE, note);
@@ -68,6 +68,7 @@ public class DBDataSource {
         Note newNote = cursorToNote(cursor);
         cursor.close();
         return newNote;
+        //GitHubTest
     }
 
 
