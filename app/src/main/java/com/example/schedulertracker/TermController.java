@@ -11,6 +11,7 @@ import android.widget.EditText;
 public class TermController  extends AppCompatActivity {
     private Button btnCancel;
     private Button btnSubmit;
+    private Button btnDelete;
     MainActivity mainActivity;
     boolean isNew = true;
     Long termID;
@@ -23,7 +24,17 @@ public class TermController  extends AppCompatActivity {
         //mainActivity = new MainActivity();
         //mainActivity.setTermController(this);
         Intent intent = getIntent();
+
         isNew = intent.getBooleanExtra("isNew", true);
+
+        btnDelete = (Button) findViewById(R.id.btnDelete);
+
+        btnDelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) { deleteTerm(); }
+        });
+        btnDelete.setEnabled(false);
+
         if (!isNew){
             EditText edit = (EditText)findViewById(R.id.editTermName);
             edit.setText(intent.getStringExtra("title"));
@@ -33,6 +44,7 @@ public class TermController  extends AppCompatActivity {
             edit.setText(intent.getStringExtra("endDate"));
             termID = intent.getLongExtra("termID",999);
             position = intent.getIntExtra("position",999);
+            btnDelete.setEnabled(true);
         }
 
         btnCancel = (Button) findViewById(R.id.btnCancel);
@@ -52,6 +64,16 @@ public class TermController  extends AppCompatActivity {
 
             }
         });
+    }
+    void deleteTerm(){
+        Log.d("TermController", "addTermStart_!isNew_delete");
+        Intent intent = new Intent();
+        intent.putExtra("isNew", false);
+        intent.putExtra("termID", termID);
+        intent.putExtra("position", position);
+        intent.putExtra("action", "delete");
+        setResult(RESULT_OK, intent);
+        finish();
     }
     void addTerm(){
         if (isNew) {
@@ -78,6 +100,7 @@ public class TermController  extends AppCompatActivity {
             intent.putExtra("termEndDate", edit.getText().toString());
             intent.putExtra("termID", termID);
             intent.putExtra("position", position);
+            intent.putExtra("action", "modify");
             setResult(RESULT_OK, intent);
             finish();
         }

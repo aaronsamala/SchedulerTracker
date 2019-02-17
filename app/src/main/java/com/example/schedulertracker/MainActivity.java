@@ -156,23 +156,35 @@ public class MainActivity extends AppCompatActivity{
                         addTerm(term);
                         //textView.setText(messageReturn);
                     }else if (!isNew) {
-                        Log.d("ActResult", "Received_!isNew");
-                        String termTitle = dataIntent.getStringExtra("termTitle");
-                        String termStartDate = dataIntent.getStringExtra("termStartDate");
-                        String termEndDate = dataIntent.getStringExtra("termEndDate");
-                        Long termID = dataIntent.getLongExtra("termID", 999);
-                        int position = dataIntent.getIntExtra("position", 999);
-                        Term term = new Term();
-                        term.setTitle(termTitle);
-                        term.setStartDate(termStartDate);
-                        term.setEndDate(termEndDate);
-                        term.setTermID(termID);
-                        //termArrayAdapter.add(termTitle);
-                        termValues.remove(position);
-                        termValues.add(position, term);
-                        setTermList();
-                        modTerm(term);
-                        //textView.setText(messageReturn);
+                        String action = dataIntent.getStringExtra("action");
+                        Log.d("actionEquals", action);
+                        if (action.equals("modify")){
+                            Log.d("ActResult", "Received_!isNew");
+                            String termTitle = dataIntent.getStringExtra("termTitle");
+                            String termStartDate = dataIntent.getStringExtra("termStartDate");
+                            String termEndDate = dataIntent.getStringExtra("termEndDate");
+                            Long termID = dataIntent.getLongExtra("termID", 999);
+                            int position = dataIntent.getIntExtra("position", 999);
+                            Term term = new Term();
+                            term.setTitle(termTitle);
+                            term.setStartDate(termStartDate);
+                            term.setEndDate(termEndDate);
+                            term.setTermID(termID);
+                            //termArrayAdapter.add(termTitle);
+                            termValues.remove(position);
+                            termValues.add(position, term);
+                            setTermList();
+                            modTerm(term);
+                            //textView.setText(messageReturn);
+                        } else if (action.equals("delete")){
+                            Log.d("ActResult", "Received_!isNewDelete");
+                            Long termID = dataIntent.getLongExtra("termID", 999);
+                            int position = dataIntent.getIntExtra("position", 999);
+                            datasource.deleteTerm(termID);
+                            termValues.remove(position);
+                            setTermList();
+                        }
+
                     }
                 }
         }

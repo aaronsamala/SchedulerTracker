@@ -5,22 +5,25 @@ import java.util.ArrayList;
 public class Course {
     ArrayList<Assessment> assessments;
     ArrayList<CourseMentor> courseMentors;
-    Integer courseID, termID, startDate, anticipatedEndDate;
+    Long courseID;
+    Long termID;
+    String startDate;
+    String anticipatedEndDate;
     String title, status, notes;
 
     public Course(){
         this.assessments = new ArrayList<>();
         this.courseMentors = new ArrayList<>();
-        this.courseID = 0;
-        this.termID = 0;
-        this.startDate = 0;
-        this.anticipatedEndDate = 0;
+        this.courseID = 0L;
+        this.termID = 0L;
+        this.startDate = "";
+        this.anticipatedEndDate = "";
         this.title = "";
         this.status = "";
         this.notes = "";
     }
-    public Course(ArrayList assessments, ArrayList courseMentors, Integer courseID, Integer termID, Integer startDate, Integer anticipatedEndDate,
-     String title, String status, String notes){
+    public Course(ArrayList assessments, ArrayList courseMentors, Long courseID, Long termID, String startDate, String anticipatedEndDate,
+                  String title, String status, String notes){
         this.assessments = assessments;
         this.courseMentors = courseMentors;
         this.courseID = courseID;
@@ -48,35 +51,35 @@ public class Course {
         this.courseMentors = courseMentors;
     }
 
-    public Integer getCourseID() {
+    public Long getCourseID() {
         return courseID;
     }
 
-    public void setCourseID(Integer courseID) {
+    public void setCourseID(Long courseID) {
         this.courseID = courseID;
     }
 
-    public Integer getTermID() {
+    public Long getTermID() {
         return termID;
     }
 
-    public void setTermID(Integer termID) {
+    public void setTermID(Long termID) {
         this.termID = termID;
     }
 
-    public Integer getStartDate() {
+    public String getStartDate() {
         return startDate;
     }
 
-    public void setStartDate(Integer startDate) {
+    public void setStartDate(String startDate) {
         this.startDate = startDate;
     }
 
-    public Integer getAnticipatedEndDate() {
+    public String getAnticipatedEndDate() {
         return anticipatedEndDate;
     }
 
-    public void setAnticipatedEndDate(Integer anticipatedEndDate) {
+    public void setAnticipatedEndDate(String anticipatedEndDate) {
         this.anticipatedEndDate = anticipatedEndDate;
     }
 
