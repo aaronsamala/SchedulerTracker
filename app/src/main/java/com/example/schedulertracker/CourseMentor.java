@@ -1,17 +1,19 @@
 package com.example.schedulertracker;
 
 public class CourseMentor {
-    Integer courseMentorID, courseID;
+    Long courseMentorID;
+    Long courseID;
     String name, phoneNumber, emailAddress;
 
     public CourseMentor(){
-        this.courseMentorID=0;
+    	this.courseMentorID=0L;
+    	this.courseID=0L;
         this.name="";
         this.phoneNumber="";
         this.emailAddress="";
     }
 
-    public CourseMentor(Integer courseMentorID, Integer courseID, String name, String phoneNumber, String emailAddress){
+    public CourseMentor(Long courseMentorID, Long courseID, String name, String phoneNumber, String emailAddress){
         this.courseMentorID=courseMentorID;
         this.courseID = courseID;
         this.name = name;
@@ -19,19 +21,19 @@ public class CourseMentor {
         this.emailAddress = emailAddress;
     }
 
-    public Integer getCourseMentorID() {
+    public Long getCourseMentorID() {
         return courseMentorID;
     }
 
-    public void setCourseMentorID(Integer courseMentorID) {
+    public void setCourseMentorID(Long courseMentorID) {
         this.courseMentorID = courseMentorID;
     }
 
-    public Integer getCourseID() {
+    public Long getCourseID() {
         return courseID;
     }
 
-    public void setCourseID(Integer courseID) {
+    public void setCourseID(Long courseID) {
         this.courseID = courseID;
     }
     public String getName() {

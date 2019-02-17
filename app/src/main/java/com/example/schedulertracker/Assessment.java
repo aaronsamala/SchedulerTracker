@@ -1,19 +1,19 @@
 package com.example.schedulertracker;
 
 public class Assessment {
-    Integer assessmentID, dueDate, goalDate, courseID;
-    String title, assessmentType;
+    Long assessmentID, courseID;
+    String title, assessmentType, dueDate, goalDate;
 
     public Assessment(){
-        this.assessmentID = 0;
-        this.dueDate = 0;
-        this.goalDate = 0;
-        this.courseID = 0;
+        this.assessmentID = 0L;
+        this.dueDate = "";
+        this.goalDate = "";
+        this.courseID = 0L;
         this.title = "";
         this.assessmentType = "";
     }
 
-    public Assessment(Integer assessmentID, Integer dueDate, Integer goalDate, String title, String assessmentType, Integer courseID){
+    public Assessment(Long assessmentID, String dueDate, String goalDate, String title, String assessmentType, Long courseID){
         this.assessmentID = assessmentID;
         this.dueDate = dueDate;
         this.goalDate = goalDate;
@@ -22,35 +22,35 @@ public class Assessment {
         this.assessmentType = assessmentType;
     }
 
-    public Integer getAssessmentID() {
+    public Long getAssessmentID() {
         return assessmentID;
     }
 
-    public void setAssessmentID(Integer assessmentID) {
+    public void setAssessmentID(Long assessmentID) {
         this.assessmentID = assessmentID;
     }
 
-    public Integer getDueDate() {
+    public String getDueDate() {
         return dueDate;
     }
 
-    public void setDueDate(Integer dueDate) {
+    public void setDueDate(String dueDate) {
         this.dueDate = dueDate;
     }
 
-    public Integer getGoalDate() {
+    public String getGoalDate() {
         return goalDate;
     }
 
-    public void setGoalDate(Integer goalDate) {
+    public void setGoalDate(String goalDate) {
         this.goalDate = goalDate;
     }
 
-    public Integer getCourseID() {
+    public Long getCourseID() {
         return courseID;
     }
 
-    public void setCourseID(Integer courseID) {
+    public void setCourseID(Long courseID) {
         this.courseID = courseID;
     }
 

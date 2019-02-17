@@ -68,7 +68,6 @@ public class DBDataSource {
         Note newNote = cursorToNote(cursor);
         cursor.close();
         return newNote;
-        //GitHubTest
     }
 
 
@@ -183,14 +182,7 @@ public class DBDataSource {
     }
     //End add Term items
 
-    /*
-        public static final String COL_COURSE_ID = "courseID";
-    public static final String COL_COURSE_TERM_ID = "course_TermID";
-    public static final String COL_COURSE_START_DATE = "startDate";
-    public static final String COL_COURSE_END_DATE = "endDate";
-    public static final String COL_COURSE_TITLE = "title";
-    public static final String COL_COURSE_STATUS = "status";
-     */
+
     //Add Course items
     public Course createCourse(Long termID, String courseTitle, String startDate, String endDate, String status) {
         ContentValues values = new ContentValues();
@@ -232,23 +224,7 @@ public class DBDataSource {
         db.delete(DBHelper.TBL_COURSES, DBHelper.COL_COURSE_ID
                 + " = " + id, null);
     }
-    /*
 
-
-
-
-    public void deleteTerm(Term term) {
-        Log.d("DeleteTest",term.getTermID().toString());
-        long id = term.getTermID();
-        System.out.println("Term deleted with id: " + id);
-        db.delete(DBHelper.TBL_TERMS, DBHelper.COL_TERM_ID
-                + " = " + id, null);
-    }
-
-
-
-
-     */
 
 
     public List<Course> getAllCourses() {
@@ -278,5 +254,113 @@ public class DBDataSource {
         course.setStatus(cursor.getString(1));
         return course;
     }
-//End add Term items
+    //End add Course items
+    
+    
+    
+    /*
+     *     //Begin CourseMentor DB items
+    public static final String TBL_COURSE_MENTORS = "courseMentors";
+    public static final String COL_COURSE_MENTOR_ID = "courseMentorID";
+    public static final String COL_COURSE_MENTOR_COURSE_ID = "courseMentor_CourseID";
+    public static final String COL_COURSE_MENTOR_NAME = "courseMentorName";
+    public static final String COL_COURSE_MENTOR_PHONE_NUMBER = "courseMentorPhoneNumber";
+    public static final String COL_COURSE_MENTOR_EMAIL_ADDRESS = "courseMentorEmailAddress";
+    //End CourseMentor DB items
+     */
+    //Add Course items
+   public CourseMentor createCourseMentor(Long courseMentorID, Long courseID, String name, String phoneNumber, String emailAddress) {
+       ContentValues values = new ContentValues();
+       values.put(DBHelper.COL_COURSE_MENTOR_ID, termID);
+       values.put(DBHelper.COL_COURSE_MENTOR_COURSE_ID, courseID);
+       values.put(DBHelper.COL_COURSE_MENTOR_NAME, name);
+       values.put(DBHelper.COL_COURSE_MENTOR_PHONE_NUMBER, phoneNumber);
+       values.put(DBHelper.COL_COURSE_MENTOR_EMAIL_ADDRESS, emailAddress);
+       long insertId = db.insert(DBHelper.TBL_COURSE_MENTORS, null,
+               values);
+       Cursor cursor = db.query(DBHelper.TBL_COURSE_MENTORS,
+               allTermCols, DBHelper.COL_COURSE_MENTOR_ID + " = " + insertId, null,
+               null, null, null);
+       cursor.moveToFirst();
+       Course newCourse = cursorToCourseMentor(cursor);
+       cursor.close();
+       return newCourse;
+   }
+   
+   public Course modCourse(Integer courseID, Integer termID, String courseTitle, String startDate, String endDate, String status) {
+       ContentValues values = new ContentValues();
+       values.put(DBHelper.COL_COURSE_ID, courseID);
+       values.put(DBHelper.COL_COURSE_TERM_ID, termID);
+       values.put(DBHelper.COL_COURSE_START_DATE, startDate);
+       values.put(DBHelper.COL_COURSE_END_DATE, endDate);
+       values.put(DBHelper.COL_COURSE_TITLE, courseTitle);
+       values.put(DBHelper.COL_COURSE_STATUS, status);
+
+       db.update(DBHelper.TBL_COURSES, values, DBHelper.COL_COURSE_ID
+               + "=" + courseID, null);
+
+
+       Course newCourse = new Course();
+       return newCourse;
+   }
+    /*
+     *     Long courseMentorID;
+    Long courseID;
+    String name, phoneNumber, emailAddress;
+
+
+    public Course modCourse(Integer courseID, Integer termID, String courseTitle, String startDate, String endDate, String status) {
+        ContentValues values = new ContentValues();
+        values.put(DBHelper.COL_COURSE_ID, courseID);
+        values.put(DBHelper.COL_COURSE_TERM_ID, termID);
+        values.put(DBHelper.COL_COURSE_START_DATE, startDate);
+        values.put(DBHelper.COL_COURSE_END_DATE, endDate);
+        values.put(DBHelper.COL_COURSE_TITLE, courseTitle);
+        values.put(DBHelper.COL_COURSE_STATUS, status);
+
+        db.update(DBHelper.TBL_COURSES, values, DBHelper.COL_COURSE_ID
+                + "=" + courseID, null);
+
+
+        Course newCourse = new Course();
+        return newCourse;
+    }
+
+    public void deleteCourse(Long id) {
+        System.out.println("Course deleted with id: " + id);
+        db.delete(DBHelper.TBL_COURSES, DBHelper.COL_COURSE_ID
+                + " = " + id, null);
+    }
+
+
+
+    public List<Course> getAllCourses() {
+        List<Course> courses = new ArrayList<Course>();
+
+        Cursor cursor = db.query(DBHelper.TBL_COURSES,
+                allCourseCols, null, null, null, null, null);
+
+        cursor.moveToFirst();
+        while (!cursor.isAfterLast()) {
+            Course course = cursorToCourse(cursor);
+            courses.add(course);
+            cursor.moveToNext();
+        }
+        // make sure to close the cursor
+        cursor.close();
+        return courses;
+    }
+
+    private Course cursorToCourse(Cursor cursor) {
+        Course course = new Course();
+        course.setCourseID(cursor.getLong(0));
+        course.setTermID(cursor.getLong(1));
+        course.setStartDate(cursor.getString(2));
+        course.setAnticipatedEndDate(cursor.getString(3));
+        course.setTitle(cursor.getString(1));
+        course.setStatus(cursor.getString(1));
+        return course;
+    }
+//End add Course items
+     */
 }
