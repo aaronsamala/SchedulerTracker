@@ -44,7 +44,7 @@ public class DBHelper extends SQLiteOpenHelper {
     public static final String COL_COURSE_MENTOR_EMAIL_ADDRESS = "courseMentorEmailAddress";
     //End CourseMentor DB items
 
-    //Begin CourseMentor DB items
+    //Begin Assessment DB items
     public static final String TBL_ASSESSMENTS = "assessments";
     public static final String COL_ASSESSMENT_ID = "assessmentID";
     public static final String COL_ASSESSMENT_COURSE_ID = "assessment_CourseID";
@@ -52,16 +52,16 @@ public class DBHelper extends SQLiteOpenHelper {
     public static final String COL_TYPE = "type";
     public static final String COL_DUE_DATE = "dueDate";
     public static final String COL_GOAL_DATE = "goalDate";
-    //End CourseMentor DB items
+    //End Assessment DB items
     
     private static final String DB_NAME = "schedulertracker.db";
     private static final int DB_VERSION = 1;
 
     // Database creation sql statement
-    private static final String DB_CREATE = "create table "
+    private static final String DB_NOTES_CREATE = "create table "
             + TBL_NOTES + "( " + COL_NOTE_ID
             + " integer primary key autoincrement, "
-            + COL_NOTE_COURSE_ID + " integer not null"
+            + COL_NOTE_COURSE_ID + " integer not null,"
             + COL_NOTE + " text not null);"
             ;
     private static final String DB_TERMS_CREATE =
@@ -90,7 +90,7 @@ public class DBHelper extends SQLiteOpenHelper {
             //Begin CourseMentors create
             " create table "
                     + TBL_COURSE_MENTORS + "( " + COL_COURSE_MENTOR_ID + " integer primary key autoincrement, "
-                    + COL_COURSE_TERM_ID + " integer, "
+                    + COL_COURSE_MENTOR_COURSE_ID + " integer, "
                     + COL_COURSE_MENTOR_NAME + " string, "
                     + COL_COURSE_MENTOR_PHONE_NUMBER + " string, "
                     + COL_COURSE_MENTOR_EMAIL_ADDRESS + " string "
@@ -115,12 +115,11 @@ public class DBHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL(DB_CREATE);
+        db.execSQL(DB_NOTES_CREATE);
         db.execSQL(DB_TERMS_CREATE);
         db.execSQL(DB_COURSES_CREATE);
         db.execSQL(DB_COURSE_MENTORS_CREATE);
-        db.execSQL(TBL_ASSESSMENTS);
-        db.execSQL(TBL_NOTES);
+        db.execSQL(DB_ASSESSMENTS_CREATE);
     }
 
     @Override
@@ -133,7 +132,6 @@ public class DBHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + TBL_COURSES);
         db.execSQL("DROP TABLE IF EXISTS " + TBL_COURSE_MENTORS);
         db.execSQL("DROP TABLE IF EXISTS " + TBL_ASSESSMENTS);
-        db.execSQL("DROP TABLE IF EXISTS " + TBL_NOTES);
 
         onCreate(db);
     }
