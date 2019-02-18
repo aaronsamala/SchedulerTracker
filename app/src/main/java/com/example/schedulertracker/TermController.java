@@ -5,8 +5,12 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ListView;
+
+import java.util.List;
 
 public class TermController  extends AppCompatActivity {
     private Button btnCancel;
@@ -17,12 +21,26 @@ public class TermController  extends AppCompatActivity {
     Long termID;
     int position;
 
+    private Button btnAddCourse;
+    private DBDataSource datasource;
+    List<Course> courseValues;
+    CourseController courseController;
+    Course courseToPass = new Course();
+    private final static int COURSE_REQUEST_CODE = 2;
+    ListView courseListView;
+    String[] courseArray;
+    ArrayAdapter<String> courseArrayAdapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_term);
         //mainActivity = new MainActivity();
         //mainActivity.setTermController(this);
+        //datasource = new DBDataSource(this);
+        //datasource.open();
+
+
         Intent intent = getIntent();
 
         isNew = intent.getBooleanExtra("isNew", true);
@@ -45,6 +63,24 @@ public class TermController  extends AppCompatActivity {
             termID = intent.getLongExtra("termID",999);
             position = intent.getIntExtra("position",999);
             btnDelete.setEnabled(true);
+
+
+            //MainActivity getContext = (MainActivity)getApplicationContext();
+            //getCallingActivity();
+            //datasource = getContext.getDatasource();
+            datasource = new DBDataSource(this);
+            datasource.open();
+            courseValues = datasource.getAllCourses();
+
+            //filter for only the applicable courses
+            filterCourses();
+            setCourseList();
+            btnAddCourse = (Button) findViewById(R.id.btnAddCourse);
+
+            btnAddCourse.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) { btnAddCourse(); }
+            });
         }
 
         btnCancel = (Button) findViewById(R.id.btnCancel);
@@ -64,6 +100,33 @@ public class TermController  extends AppCompatActivity {
 
             }
         });
+
+
+
+
+
+    }
+    void filterCourses(){
+
+        for (Course course : courseValues){
+            if (!course.getTermID().toString().equals(termID.toString())){
+                courseValues.remove(course);
+            }
+        }
+    }
+    void setCourseList(){
+        courseArray = new String[courseValues.size()];
+        for(int i = 0; i < courseValues.size(); i++) courseArray[i] = courseValues.get(i).getTitle();
+
+        courseListView = (ListView)findViewById(R.id.listCourses);
+        courseArrayAdapter = new ArrayAdapter<String>(this,R.layout.activity_listview, R.id.textView, courseArray);
+        courseListView.setAdapter(courseArrayAdapter);
+    }
+    void btnAddCourse(){
+
+        Intent intent = new Intent(this, CourseController.class);
+        intent.putExtra("isNew", true);
+        startActivityForResult(intent, COURSE_REQUEST_CODE);
     }
     void deleteTerm(){
         Log.d("TermController", "addTermStart_!isNew_delete");

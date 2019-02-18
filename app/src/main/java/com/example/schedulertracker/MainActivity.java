@@ -1,6 +1,7 @@
 package com.example.schedulertracker;
 
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -21,8 +22,11 @@ import android.widget.Toast;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity{
+
+
+
     private Button btnAddTermButton;
-    private DBDataSource datasource;
+     DBDataSource datasource;
     List<Term> termValues;
     TermController termController;
     Term termToPass = new Term();
@@ -31,6 +35,12 @@ public class MainActivity extends AppCompatActivity{
     String[] termArray;
     ArrayAdapter<String> termArrayAdapter;
 
+
+    DBDataSource getDatasource(){
+
+        return datasource;
+
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +58,11 @@ public class MainActivity extends AppCompatActivity{
                         .setAction("Action", null).show();
             }
         });
+
+
+
+        datasource = new DBDataSource(this);
+        datasource.open();
         btnAddTermButton = (Button) findViewById(R.id.btnAddTermButton);
 
         btnAddTermButton.setOnClickListener(new View.OnClickListener() {
@@ -56,17 +71,19 @@ public class MainActivity extends AppCompatActivity{
         });
 
         //Add DB stuff 20190210
-        datasource = new DBDataSource(this);
-        datasource.open();
+
         //datasource.createTerm("TermTest");
 
         //datasource.createTerm("TermTest", "testStartDate", "testEndDate");
+
+        termValues = datasource.getAllTerms();
+
+        /*
         Term tmpTerm = new Term();
         tmpTerm.setTitle("TESTTITLE");
         tmpTerm.setStartDate("TESTstart");
         tmpTerm.setEndDate("TESTend");
         //addTerm(tmpTerm);
-        termValues = datasource.getAllTerms();
         for (Term term : termValues)
         {
             String tmp = term.getTitle() + ", " + term.getTermID() + ", " + term.getStartDate() + ", " + term.getEndDate();
@@ -75,7 +92,7 @@ public class MainActivity extends AppCompatActivity{
 
         }
         Log.d("ListTestEnd","End Of List Test");
-
+        */
 
         //start
         //String[] courses = new String[] {"C169", "C188", "C196", "C482", "EDV1", "TXC1", "TXP1", "TYC1", "TYP1"};
@@ -127,6 +144,7 @@ public class MainActivity extends AppCompatActivity{
         intent.putExtra("endDate", term.getEndDate());
         intent.putExtra("position", position);
         startActivityForResult(intent, TERM_REQUEST_CODE);
+
     }
 
     @Override
@@ -235,6 +253,7 @@ public class MainActivity extends AppCompatActivity{
         datasource.open();
 
         termValues = datasource.getAllTerms();
+        /*
         for (Term term : termValues)
         {
             String tmp = term.getTitle() + ", " + term.getTermID() + ", " + term.getStartDate() + ", " + term.getEndDate();
@@ -243,6 +262,8 @@ public class MainActivity extends AppCompatActivity{
 
         }
         Log.d("ListTestEnd","End Of List Test_Redo");
+
+        */
 
         super.onResume();
     }

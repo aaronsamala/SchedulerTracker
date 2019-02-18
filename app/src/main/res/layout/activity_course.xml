@@ -5,7 +5,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".TermController"
+    tools:context=".CourseController"
     >
 
     <LinearLayout
@@ -14,10 +14,10 @@
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/termTitle"
+            android:id="@+id/courseTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/add_term" />
+            android:text="Add/modify Course" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -25,20 +25,20 @@
             android:orientation="horizontal">
 
             <TextView
-                android:id="@+id/termName"
+                android:id="@+id/courseName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="@string/term_name" />
+                android:text="Course Title: " />
 
             <EditText
-                android:id="@+id/editTermName"
+                android:id="@+id/editCourseTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:ems="10"
-                android:hint="@string/term_name"
-                android:inputType="textPersonName"/>
+                android:hint="Course Title"
+                android:inputType="textPersonName" />
 
         </LinearLayout>
 
@@ -48,7 +48,7 @@
             android:orientation="horizontal">
 
             <TextView
-                android:id="@+id/termStart"
+                android:id="@+id/courseStart"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -70,7 +70,7 @@
             android:orientation="horizontal">
 
             <TextView
-                android:id="@+id/termEnd"
+                android:id="@+id/courseEnd"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -91,12 +91,41 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
-            <Button
-                android:id="@+id/btnSubmit"
+            <TextView
+                android:id="@+id/courseStatus"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="@string/submit" />
+                android:text="Status: " />
+
+            <EditText
+                android:id="@+id/editCourseStatus"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:ems="10"
+                android:hint="Status"
+                android:inputType="textPersonName" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/btnSave"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/Save" />
+
+            <Button
+                android:id="@+id/btnSaveAndExit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/save_and_exit" />
 
         </LinearLayout>
 
