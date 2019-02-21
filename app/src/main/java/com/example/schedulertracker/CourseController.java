@@ -7,7 +7,7 @@ import android.widget.Button;
 
 public class CourseController  extends AppCompatActivity {
     private Button btnCancel;
-    private Button btnSubmit;
+    private Button btnSave;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -20,9 +20,9 @@ public class CourseController  extends AppCompatActivity {
             public void onClick(View view) { finish(); }
         });
 
-        btnSubmit = (Button) findViewById(R.id.btnSubmit);
+        btnSave = (Button) findViewById(R.id.btnSave);
 
-        btnSubmit.setOnClickListener(new View.OnClickListener() {
+        btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
