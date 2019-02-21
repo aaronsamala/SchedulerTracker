@@ -126,6 +126,7 @@ public class TermController  extends AppCompatActivity {
 
         Intent intent = new Intent(this, CourseController.class);
         intent.putExtra("isNew", true);
+        intent.putExtra("TermID", termID);
         startActivityForResult(intent, COURSE_REQUEST_CODE);
     }
     void deleteTerm(){

@@ -26,7 +26,7 @@ public class MainActivity extends AppCompatActivity{
 
 
     private Button btnAddTermButton;
-     DBDataSource datasource;
+    DBDataSource datasource;
     List<Term> termValues;
     TermController termController;
     Term termToPass = new Term();
