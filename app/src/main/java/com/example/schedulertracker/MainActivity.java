@@ -112,7 +112,7 @@ public class MainActivity extends AppCompatActivity{
                 //String item = ((TextView)view).getText().toString();
 
                 //Toast.makeText(getBaseContext(), item, Toast.LENGTH_SHORT).show();
-                Toast.makeText(getBaseContext(), item, Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getBaseContext(), item, Toast.LENGTH_SHORT).show();
                 launchTermScreen(tmpTerm, position);
 
             }

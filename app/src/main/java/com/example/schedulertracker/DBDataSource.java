@@ -263,6 +263,23 @@ public class DBDataSource {
         return courses;
     }
 
+    public List<Course> getAllCoursesForTerm(Long id) {
+        List<Course> courses = new ArrayList<Course>();
+
+        Cursor cursor = db.query(DBHelper.TBL_COURSES,
+                allCourseCols, DBHelper.COL_COURSE_TERM_ID + " = " + id, null, null, null, null);
+
+        cursor.moveToFirst();
+        while (!cursor.isAfterLast()) {
+            Course course = cursorToCourse(cursor);
+            courses.add(course);
+            cursor.moveToNext();
+        }
+        // make sure to close the cursor
+        cursor.close();
+        return courses;
+    }
+
     private Course cursorToCourse(Cursor cursor) {
         Course course = new Course();
         course.setCourseID(cursor.getLong(0));

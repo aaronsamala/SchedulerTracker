@@ -5,11 +5,15 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.TextView;
 
+import java.util.Arrays;
 import java.util.List;
 
 public class TermController  extends AppCompatActivity {
@@ -61,6 +65,7 @@ public class TermController  extends AppCompatActivity {
             edit = (EditText)findViewById(R.id.editEndDate);
             edit.setText(intent.getStringExtra("endDate"));
             termID = intent.getLongExtra("termID",999);
+            Log.d("TermID_ONLOAD", termID.toString());
             position = intent.getIntExtra("position",999);
             btnDelete.setEnabled(true);
 
@@ -70,10 +75,10 @@ public class TermController  extends AppCompatActivity {
             //datasource = getContext.getDatasource();
             datasource = new DBDataSource(this);
             datasource.open();
-            courseValues = datasource.getAllCourses();
+            courseValues = datasource.getAllCoursesForTerm(termID);
 
             //filter for only the applicable courses
-            filterCourses();
+            //filterCourses();
             setCourseList();
             btnAddCourse = (Button) findViewById(R.id.btnAddCourse);
 
@@ -105,15 +110,79 @@ public class TermController  extends AppCompatActivity {
 
 
 
+        if (courseValues!=null){
+
+
+
+            courseListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+                @Override
+
+                public void onItemClick(AdapterView<?> parent, View view, int position,
+                                    long id) {
+                LinearLayout ll = (LinearLayout) view; // get the parent layout view
+                TextView tv = (TextView) ll.findViewById(R.id.textView); // get the child text view
+                //final String item = tv.getText().toString() + " int position= " + position;
+                //final String item = tv.getText().toString() + " int position= " + position;
+
+                Course tmpCourse = (Course) courseValues.get(position);
+                final String item = tmpCourse.getTitle() + " - " + tmpCourse.getTermID();
+                //String item = ((TextView)view).getText().toString();
+
+                //Toast.makeText(getBaseContext(), item, Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getBaseContext(), item, Toast.LENGTH_SHORT).show();
+                launchCourseScreen(tmpCourse, position);
+
+
+                }
+
+            });
+        }
+    }
+    private void launchCourseScreen(Course course, int position) {
+        Intent intent = new Intent(this, CourseController.class);
+        intent.putExtra("isNew", false);
+        //intent.putExtra("title", term.getTitle());
+        intent.putExtra("courseID", course.getCourseID());
+        intent.putExtra("position", position);
+        startActivityForResult(intent, COURSE_REQUEST_CODE);
+
     }
     void filterCourses(){
 
-        for (Course course : courseValues){
-            if (!course.getTermID().toString().equals(termID.toString())){
-                courseValues.remove(course);
+        if (!courseValues.isEmpty()) {
+            /*
+            for (Course course : courseValues) {
+                if (!course.getTermID().toString().equals(termID.toString())) {
+                    courseValues.remove(course);
+                }*/
+            int tmpInt = 0;
+            Log.d("TermID", termID.toString());
+            Log.i("TermID_courseValue.size", String.valueOf(courseValues.size()));
+            for(int i = 0; i >= courseValues.size()-1; i++)
+                tmpInt = i;
+                Log.d("TermID_FOR", courseValues.get(tmpInt).getTermID().toString());
+                if (!courseValues.get(tmpInt).getTermID().toString().equals(termID.toString())) {
+                    courseValues.remove(tmpInt);
+                    Log.d("TermID_Removing: ", courseValues.get(tmpInt).getTitle().toString());
             }
+
         }
     }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent dataIntent) {
+        super.onActivityResult(requestCode, resultCode, dataIntent);
+        Log.d("ActResult", "Started");
+        switch (requestCode)
+        {
+            // This request code is set by startActivityForResult(intent, REQUEST_CODE_1) method.
+            case COURSE_REQUEST_CODE:
+                //filterCourses();
+                courseValues = datasource.getAllCoursesForTerm(termID);
+                setCourseList();
+        }
+    }
+
     void setCourseList(){
         courseArray = new String[courseValues.size()];
         for(int i = 0; i < courseValues.size(); i++) courseArray[i] = courseValues.get(i).getTitle();
