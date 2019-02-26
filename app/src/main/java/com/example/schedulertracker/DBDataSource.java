@@ -75,9 +75,11 @@ public class DBDataSource {
         dbHelper.close();
     }
  
-    public Note createNote(String note) {
+    public Note createNote(String note, Long courseID) {
         ContentValues values = new ContentValues();
+        values.put(DBHelper.COL_NOTE_COURSE_ID, courseID);
         values.put(DBHelper.COL_NOTE, note);
+
         long insertId = db.insert(DBHelper.TBL_NOTES, null,
                 values);
         Cursor cursor = db.query(DBHelper.TBL_NOTES,
@@ -89,6 +91,24 @@ public class DBDataSource {
         return newNote;
     }
 
+    public Note modNote(Long id, Long courseID, String note) {
+        ContentValues values = new ContentValues();
+        values.put(DBHelper.COL_NOTE, note);
+        values.put(DBHelper.COL_NOTE_ID, id);
+        values.put(DBHelper.COL_NOTE_COURSE_ID, courseID);
+        db.update(DBHelper.TBL_NOTES, values, DBHelper.COL_NOTE_ID
+                + "=" + id, null);
+        /*
+        Cursor cursor = db.query(DBHelper.TBL_NOTES,
+                allNoteCols, DBHelper.COL_NOTE_ID + " = " + insertId, null,
+                null, null, null);
+        cursor.moveToFirst();
+        Note newNote = cursorToNote(cursor);
+        cursor.close();
+        */
+        Note newNote = getNote(id);
+        return newNote;
+    }
 
     public void deleteNote(Note note) {
         long id = note.getNoteID();
@@ -98,6 +118,13 @@ public class DBDataSource {
     }
 
 
+    public Note getNote(Long id){
+        Cursor cursor = db.query(DBHelper.TBL_NOTES,allNoteCols,DBHelper.COL_NOTE_ID + " = " + id, null, null, null, null);
+        cursor.moveToFirst();
+        Note newNote = cursorToNote(cursor);
+        cursor.close();
+        return newNote;
+    }
     public List<Note> getAllNotes() {
         List<Note> notes = new ArrayList<Note>();
 
@@ -118,7 +145,8 @@ public class DBDataSource {
     private Note cursorToNote(Cursor cursor) {
         Note note = new Note();
         note.setNoteID(cursor.getLong(0));
-        note.setNote(cursor.getString(1));
+        note.setNote_CourseID(cursor.getLong(1));
+        note.setNote(cursor.getString(2));
         return note;
     }
     //Add Term items
@@ -293,9 +321,9 @@ public class DBDataSource {
     //End add Course items
 
     //Add CourseMentor items
-   public CourseMentor createCourseMentor(Long courseMentorID, Long courseID, String name, String phoneNumber, String emailAddress) {
+   public CourseMentor createCourseMentor(Long courseID, String name, String phoneNumber, String emailAddress) {
        ContentValues values = new ContentValues();
-       values.put(DBHelper.COL_COURSE_MENTOR_ID, courseMentorID);
+       //values.put(DBHelper.COL_COURSE_MENTOR_ID, courseMentorID);
        values.put(DBHelper.COL_COURSE_MENTOR_COURSE_ID, courseID);
        values.put(DBHelper.COL_COURSE_MENTOR_NAME, name);
        values.put(DBHelper.COL_COURSE_MENTOR_PHONE_NUMBER, phoneNumber);
@@ -346,6 +374,21 @@ public class DBDataSource {
         }
         cursor.close();
         return courseMentors;
+    }
+    public CourseMentor getCourseMentor(Long id){
+
+        Cursor cursor = db.query(DBHelper.TBL_COURSE_MENTORS,
+                allCourseMentorCols, DBHelper.COL_COURSE_MENTOR_COURSE_ID + " = " + id, null, null, null, null);
+        CourseMentor courseMentor = new CourseMentor();
+        cursor.moveToFirst();
+        while (!cursor.isAfterLast()) {
+            courseMentor = cursorToCourseMentor(cursor);
+            //courseMentors.add(courseMentor);
+            cursor.moveToNext();
+        }
+        cursor.close();
+        return courseMentor;
+
     }
 
     private CourseMentor cursorToCourseMentor(Cursor cursor) {

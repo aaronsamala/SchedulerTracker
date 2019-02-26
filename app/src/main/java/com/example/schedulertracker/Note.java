@@ -4,7 +4,7 @@ package com.example.schedulertracker;
 
 public class Note {
     private long noteID;
-    private long note_TermID;
+    private long note_CourseID;
     private String note;
 
     public long getNoteID() {
@@ -15,12 +15,12 @@ public class Note {
         this.noteID = noteID;
     }
 
-    public long getNote_TermID() {
-        return note_TermID;
+    public long getNote_CourseID() {
+        return note_CourseID;
     }
 
-    public void setNote_TermID(long note_TermID) {
-        this.note_TermID = note_TermID;
+    public void setNote_CourseID(long note_CourseID) {
+        this.note_CourseID = note_CourseID;
     }
 
     public String getNote() {
