@@ -39,8 +39,9 @@ public class TermController  extends AppCompatActivity {
     String[] courseArray;
     ArrayAdapter<String> courseArrayAdapter;
     Calendar calendar;
-    int year, month, day;
     EditText termStartDate, termEndDate;
+    //int year, month, day;
+
 
 
     @Override
@@ -52,9 +53,11 @@ public class TermController  extends AppCompatActivity {
         //datasource = new DBDataSource(this);
         //datasource.open();
         calendar= Calendar.getInstance();
-        year = calendar.get(Calendar.YEAR);
-        month = calendar.get(Calendar.MONTH);
-        day = calendar.get(Calendar.DAY_OF_MONTH);
+        //year = calendar.get(Calendar.YEAR);
+        //month = calendar.get(Calendar.MONTH);
+        //day = calendar.get(Calendar.DAY_OF_MONTH);
+        termStartDate = (EditText) findViewById(R.id.editStartDate);
+
         final DatePickerDialog.OnDateSetListener termStartDatePicker = new DatePickerDialog.OnDateSetListener() {
 
             @Override
@@ -69,7 +72,6 @@ public class TermController  extends AppCompatActivity {
 
         };
 
-        termStartDate = (EditText) findViewById(R.id.editStartDate);
         termStartDate.setOnClickListener(new View.OnClickListener() {
 
             @Override

@@ -67,7 +67,8 @@
                     android:layout_weight="1"
                     android:ems="10"
                     android:hint="@string/month_day_year"
-                    android:inputType="date" />
+                    android:inputType="date"
+                    android:focusable="false"/>
             </LinearLayout>
 
             <LinearLayout
@@ -89,7 +90,8 @@
                     android:layout_weight="1"
                     android:ems="10"
                     android:hint="@string/month_day_year"
-                    android:inputType="date" />
+                    android:inputType="date"
+                    android:focusable="false"/>
             </LinearLayout>
 
             <LinearLayout
@@ -414,7 +416,8 @@
                     android:layout_weight="1"
                     android:ems="10"
                     android:hint="@string/month_day_year"
-                    android:inputType="date" />
+                    android:inputType="date"
+                    android:focusable="false"/>
             </LinearLayout>
 
             <LinearLayout
@@ -436,7 +439,8 @@
                     android:layout_weight="1"
                     android:ems="10"
                     android:hint="@string/month_day_year"
-                    android:inputType="date" />
+                    android:inputType="date"
+                    android:focusable="false"/>
             </LinearLayout>
 
             <LinearLayout
