@@ -296,7 +296,14 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Save Notes" />
+                    android:text="Save Note" />
+
+                <Button
+                    android:id="@+id/btnSendNotes"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Send Note" />
 
                 <Button
                     android:id="@+id/btnClearNotes"
@@ -327,7 +334,7 @@
                 <ListView
                     android:id="@+id/listAssessments"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent" />
+                    android:layout_height="wrap_content" />
             </LinearLayout>
 
             <LinearLayout

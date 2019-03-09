@@ -1,5 +1,6 @@
 package com.example.schedulertracker;
 
+import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -8,13 +9,16 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import java.util.Arrays;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
 
 public class TermController  extends AppCompatActivity {
     private Button btnCancel;
@@ -34,6 +38,10 @@ public class TermController  extends AppCompatActivity {
     ListView courseListView;
     String[] courseArray;
     ArrayAdapter<String> courseArrayAdapter;
+    Calendar calendar;
+    int year, month, day;
+    EditText termStartDate, termEndDate;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,7 +51,61 @@ public class TermController  extends AppCompatActivity {
         //mainActivity.setTermController(this);
         //datasource = new DBDataSource(this);
         //datasource.open();
+        calendar= Calendar.getInstance();
+        year = calendar.get(Calendar.YEAR);
+        month = calendar.get(Calendar.MONTH);
+        day = calendar.get(Calendar.DAY_OF_MONTH);
+        final DatePickerDialog.OnDateSetListener termStartDatePicker = new DatePickerDialog.OnDateSetListener() {
 
+            @Override
+            public void onDateSet(DatePicker view, int year, int monthOfYear,
+                                  int dayOfMonth) {
+                // TODO Auto-generated method stub
+                calendar.set(Calendar.YEAR, year);
+                calendar.set(Calendar.MONTH, monthOfYear);
+                calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+                setTermStartDate();
+            }
+
+        };
+
+        termStartDate = (EditText) findViewById(R.id.editStartDate);
+        termStartDate.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                // TODO Auto-generated method stub
+                new DatePickerDialog(TermController.this, termStartDatePicker, calendar
+                        .get(Calendar.YEAR), calendar.get(Calendar.MONTH),
+                        calendar.get(Calendar.DAY_OF_MONTH)).show();
+            }
+        });
+
+
+        final DatePickerDialog.OnDateSetListener termEndDatePicker = new DatePickerDialog.OnDateSetListener() {
+
+            @Override
+            public void onDateSet(DatePicker view, int year, int monthOfYear,
+                                  int dayOfMonth) {
+                // TODO Auto-generated method stub
+                calendar.set(Calendar.YEAR, year);
+                calendar.set(Calendar.MONTH, monthOfYear);
+                calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+                setTermEndDate();
+            }
+
+        };
+        termEndDate = (EditText) findViewById(R.id.editEndDate);
+        termEndDate.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                // TODO Auto-generated method stub
+                new DatePickerDialog(TermController.this, termEndDatePicker, calendar
+                        .get(Calendar.YEAR), calendar.get(Calendar.MONTH),
+                        calendar.get(Calendar.DAY_OF_MONTH)).show();
+            }
+        });
 
         Intent intent = getIntent();
 
@@ -267,4 +329,17 @@ public class TermController  extends AppCompatActivity {
         this.mainActivity = mainActivity;
     }
 
+    void setTermStartDate(){
+        String myFormat = "MM/dd/yyyy"; //In which you need put here
+        SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
+
+        termStartDate.setText(sdf.format(calendar.getTime()));
+    }
+
+    void setTermEndDate(){
+        String myFormat = "MM/dd/yyyy"; //In which you need put here
+        SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
+
+        termEndDate.setText(sdf.format(calendar.getTime()));
+    }
 }

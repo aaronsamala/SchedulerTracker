@@ -52,7 +52,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="@string/start_date" />
+                android:text="@string/start_date"
+                android:focusable="false"/>
 
             <EditText
                 android:id="@+id/editStartDate"
@@ -61,7 +62,8 @@
                 android:layout_weight="1"
                 android:ems="10"
                 android:inputType="date"
-                android:hint="@string/month_day_year"/>
+                android:hint="@string/month_day_year"
+                android:focusable="false"/>
         </LinearLayout>
 
         <LinearLayout
@@ -83,7 +85,8 @@
                 android:layout_weight="1"
                 android:ems="10"
                 android:hint="@string/month_day_year"
-                android:inputType="date" />
+                android:inputType="date"
+                android:focusable="false"/>
         </LinearLayout>
 
         <LinearLayout

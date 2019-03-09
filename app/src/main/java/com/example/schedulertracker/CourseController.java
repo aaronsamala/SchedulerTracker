@@ -5,9 +5,15 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import java.util.List;
 
@@ -17,6 +23,7 @@ public class CourseController  extends AppCompatActivity {
     private Button btnSaveCourseMentor;
     private Button btnDeleteCourseMentor;
     private Button btnSaveNote;
+    private Button btnSendNote;
     private Button btnDeleteNote;
     private Button btnSaveAssessment;
     private Button btnDeleteAssessment;
@@ -29,6 +36,11 @@ public class CourseController  extends AppCompatActivity {
     CourseMentor courseMentor;
     Note note;
     int position;
+    Assessment assessment;
+    List<Assessment> assessmentValues;
+    ListView assessmentListView;
+    String[] assessmentArray;
+    ArrayAdapter<String> assessmentArrayAdapter;
 
 /*
 
@@ -84,9 +96,16 @@ public class CourseController  extends AppCompatActivity {
                     Log.d("TermID_ONCOURSELOAD", termID.toString());
                 }
             }
+            setAssessmentArrayList();
+            loadCourseMentor();
+            loadNote();
+            loadAssessments();
         }
 
 
+
+
+        Log.d("ListCourseEnd","End Of Course List Test");
 
 
         btnCancel = (Button) findViewById(R.id.btnCancel);
@@ -140,6 +159,17 @@ public class CourseController  extends AppCompatActivity {
             }
         });
 
+        btnSendNote = (Button) findViewById(R.id.btnSendNotes);
+
+        btnSendNote.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                sendNote();
+
+            }
+        });
+
         btnDeleteNote = (Button) findViewById(R.id.btnClearNotes);
 
         btnDeleteNote.setOnClickListener(new View.OnClickListener() {
@@ -158,6 +188,7 @@ public class CourseController  extends AppCompatActivity {
             public void onClick(View view) {
 
                 saveAssessment();
+                setAssessmentArrayList();
 
             }
         });
@@ -169,17 +200,46 @@ public class CourseController  extends AppCompatActivity {
             public void onClick(View view) {
 
                 deleteAssessment();
+                setAssessmentArrayList();
 
             }
         });
 
-        if (!isNew) {
-            loadCourseMentor();
-            loadNote();
-            loadAssessments();
-        }
     }
 
+    void sendNote(  ){
+
+
+        EditText editNotes = (EditText) findViewById(R.id.editNote);
+        String notes = editNotes.getText().toString();
+        EditText editCourseTitle = (EditText) findViewById(R.id.editCourseTitle);
+        String subject = editCourseTitle.getText().toString();
+        subject += " Notes";
+        Intent intent = new Intent(Intent.ACTION_SEND);
+        intent.setType("text/html");
+        intent.putExtra(Intent.EXTRA_SUBJECT, subject);
+        intent.putExtra(Intent.EXTRA_TEXT, notes);
+
+        startActivity(Intent.createChooser(intent, "Send Email"));
+    }
+
+    void setAssessmentArrayList(){
+        assessmentValues = datasource.getAllAssessments(courseID);
+        for (Assessment assessment : assessmentValues){
+            String tmp = assessment.getTitle() + ", " + assessment.getCourseID() + ", " + "courseId = " + courseID + assessment.getAssessmentType();
+            Log.d("AssessmentListTest",tmp);
+        }
+        assessmentArray = new String[assessmentValues.size()];
+        for(int i = 0; i < assessmentValues.size(); i++) {
+            assessmentArray[i] = assessmentValues.get(i).getTitle();
+        }
+        Log.d("AssessmentTest", "setAssessmentArrayList: 1, " + assessmentArray.length);
+        assessmentListView = (ListView)findViewById(R.id.listAssessments);
+        assessmentArrayAdapter = new ArrayAdapter<String>(this,R.layout.activity_listview, R.id.textView, assessmentArray);
+        assessmentListView.setAdapter(assessmentArrayAdapter);
+        ListView list = (ListView) findViewById(R.id.listAssessments);
+        setListViewHeightBasedOnChildren(list);
+    }
     void loadCourseMentor(){
         courseMentor = datasource.getCourseMentor(courseID);
         if (!courseMentor.getName().isEmpty()){
@@ -230,6 +290,42 @@ public class CourseController  extends AppCompatActivity {
 
     void loadAssessments(){
 
+        if (assessmentValues!=null){
+            assessmentListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+                @Override
+
+                public void onItemClick(AdapterView<?> parent, View view, int position,
+                                        long id) {
+                    LinearLayout ll = (LinearLayout) view; // get the parent layout view
+                    TextView tv = (TextView) ll.findViewById(R.id.textView); // get the child text view
+                    //final String item = tv.getText().toString() + " int position= " + position;
+                    //final String item = tv.getText().toString() + " int position= " + position;
+
+                    assessment = (Assessment) assessmentValues.get(position);
+                    loadAssessment();
+                    //final String item = assessment.getTitle() + " - " + assessment.getTermID();
+                    //String item = ((TextView)view).getText().toString();
+
+                    //Toast.makeText(getBaseContext(), item, Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(getBaseContext(), item, Toast.LENGTH_SHORT).show();
+                    //launchCourseScreen(tmpCourse, position);
+                }
+            });
+        }
+        ListView list = (ListView) findViewById(R.id.listAssessments);
+        setListViewHeightBasedOnChildren(list);
+    }
+
+    void loadAssessment(){
+        EditText editTitle = (EditText) findViewById(R.id.editAssessmentTitle);
+        editTitle.setText(assessment.getTitle());
+        EditText editType = (EditText) findViewById(R.id.editAssessmentType);
+        editType.setText(assessment.getAssessmentType());
+        EditText editDueDate = (EditText) findViewById(R.id.editDueDate);
+        editDueDate.setText(assessment.getDueDate());
+        EditText editGoalDate = (EditText) findViewById(R.id.editGoalDate);
+        editGoalDate.setText(assessment.getGoalDate());
     }
 
     void saveCourseMentor(){
@@ -255,6 +351,17 @@ public class CourseController  extends AppCompatActivity {
     }
 
     void deleteCourseMentor(){
+        if (courseMentor!=null){
+            courseMentor = datasource.modCourseMentor(courseMentor.getCourseMentorID(), courseMentor.getCourseID(), "", "", "");
+
+            EditText edit = (EditText) findViewById(R.id.editCourseMentorName);
+            edit.setText("");
+            edit = (EditText) findViewById(R.id.editCourseMentorEmail);
+            edit.setText("");
+            edit = (EditText) findViewById(R.id.editCourseMentorPhone);
+            edit.setText("");
+
+        }
 
     }
 
@@ -268,15 +375,56 @@ public class CourseController  extends AppCompatActivity {
     }
 
     void deleteNote(){
+        if (note!=null){
+            datasource.modNote(note.getNoteID(), note.getNote_CourseID(), "");
+            EditText editNote = (EditText) findViewById(R.id.editNote);
+            editNote.setText("");
+        }
 
     }
-
+/*
+this.assessmentID = 0L;
+        this.dueDate = "";
+        this.goalDate = "";
+        this.courseID = 0L;
+        this.title = "";
+        this.assessmentType = "";
+ */
     void saveAssessment(){
+        if (assessment==null) {
 
+
+            EditText editTitle = (EditText) findViewById(R.id.editAssessmentTitle);
+            String title = editTitle.getText().toString();
+            EditText editType = (EditText) findViewById(R.id.editAssessmentType);
+            String type = editType.getText().toString();
+            EditText editDueDate = (EditText) findViewById(R.id.editDueDate);
+            String dueDate = editDueDate.getText().toString();
+            EditText editGoalDate = (EditText) findViewById(R.id.editGoalDate);
+            String goalDate = editGoalDate.getText().toString();
+
+            datasource.createAssessment(courseID, title, type, dueDate, goalDate);
+
+        } else if (assessment!=null){
+            EditText editTitle = (EditText) findViewById(R.id.editAssessmentTitle);
+            String title = editTitle.getText().toString();
+            EditText editType = (EditText) findViewById(R.id.editAssessmentType);
+            String type = editType.getText().toString();
+            EditText editDueDate = (EditText) findViewById(R.id.editDueDate);
+            String dueDate = editDueDate.getText().toString();
+            EditText editGoalDate = (EditText) findViewById(R.id.editGoalDate);
+            String goalDate = editGoalDate.getText().toString();
+
+            datasource.modAssessment(assessment.getAssessmentID(), courseID, title, type, dueDate, goalDate);
+        }
+        assessment = null;
     }
 
     void deleteAssessment(){
 
+        if (assessment != null) {
+            datasource.deleteAssessment(assessment.getAssessmentID());
+        }
     }
 
     void addCourse(){
@@ -342,5 +490,25 @@ public class CourseController  extends AppCompatActivity {
             );
 
         }
+    }
+    public static void setListViewHeightBasedOnChildren(ListView listView) {
+        ListAdapter listAdapter = listView.getAdapter();
+        if (listAdapter == null)
+            return;
+
+        int desiredWidth = View.MeasureSpec.makeMeasureSpec(listView.getWidth(), View.MeasureSpec.UNSPECIFIED);
+        int totalHeight = 0;
+        View view = null;
+        for (int i = 0; i < listAdapter.getCount(); i++) {
+            view = listAdapter.getView(i, view, listView);
+            if (i == 0)
+                view.setLayoutParams(new ViewGroup.LayoutParams(desiredWidth, ViewGroup.LayoutParams.WRAP_CONTENT));
+
+            view.measure(desiredWidth, View.MeasureSpec.UNSPECIFIED);
+            totalHeight += view.getMeasuredHeight();
+        }
+        ViewGroup.LayoutParams params = listView.getLayoutParams();
+        params.height = totalHeight + (listView.getDividerHeight() * (listAdapter.getCount() - 1));
+        listView.setLayoutParams(params);
     }
 }

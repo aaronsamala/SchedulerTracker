@@ -117,6 +117,13 @@ public class DBDataSource {
                 + " = " + id, null);
     }
 
+    public void deleteNote(Long id) {
+        //long id = note.getNoteID();
+        System.out.println("Note deleted with id: " + id);
+        db.delete(DBHelper.TBL_NOTES, DBHelper.COL_NOTE_ID
+                + " = " + id, null);
+    }
+
 
     public Note getNote(Long id){
         Cursor cursor = db.query(DBHelper.TBL_NOTES,allNoteCols,DBHelper.COL_NOTE_ID + " = " + id, null, null, null, null);
@@ -403,9 +410,8 @@ public class DBDataSource {
     //End add CourseMentor items
 
     //Add Assessment items
-    public Assessment createAssessment(Long assessmentID, Long courseID, String title, String assessmentType, String dueDate, String goalDate) {
+    public Assessment createAssessment(Long courseID, String title, String assessmentType, String dueDate, String goalDate) {
         ContentValues values = new ContentValues();
-        values.put(DBHelper.COL_ASSESSMENT_ID, assessmentID);
         values.put(DBHelper.COL_ASSESSMENT_COURSE_ID, courseID);
         values.put(DBHelper.COL_TITLE, title);
         values.put(DBHelper.COL_TYPE, assessmentType);
@@ -424,7 +430,6 @@ public class DBDataSource {
 
     public Assessment modAssessment(Long assessmentID, Long courseID, String title, String assessmentType, String dueDate, String goalDate) {
         ContentValues values = new ContentValues();
-        values.put(DBHelper.COL_ASSESSMENT_ID, assessmentID);
         values.put(DBHelper.COL_ASSESSMENT_COURSE_ID, courseID);
         values.put(DBHelper.COL_TITLE, title);
         values.put(DBHelper.COL_TYPE, assessmentType);
@@ -449,6 +454,21 @@ public class DBDataSource {
 
         Cursor cursor = db.query(DBHelper.TBL_ASSESSMENTS,
                 allAssessmentCols, null, null, null, null, null);
+
+        cursor.moveToFirst();
+        while (!cursor.isAfterLast()) {
+            Assessment assessment = cursorToAssessment(cursor);
+            assessments.add(assessment);
+            cursor.moveToNext();
+        }
+        cursor.close();
+        return assessments;
+    }
+    public List<Assessment> getAllAssessments(Long id) {
+        List<Assessment> assessments = new ArrayList<Assessment>();
+
+        Cursor cursor = db.query(DBHelper.TBL_ASSESSMENTS,
+                allAssessmentCols, DBHelper.COL_ASSESSMENT_COURSE_ID + " = " + id, null, null, null, null);
 
         cursor.moveToFirst();
         while (!cursor.isAfterLast()) {
