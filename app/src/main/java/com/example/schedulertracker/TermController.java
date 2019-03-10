@@ -1,6 +1,9 @@
 package com.example.schedulertracker;
 
+import android.app.AlarmManager;
 import android.app.DatePickerDialog;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -113,6 +116,8 @@ public class TermController  extends AppCompatActivity {
 
         isNew = intent.getBooleanExtra("isNew", true);
 
+
+
         btnDelete = (Button) findViewById(R.id.btnDelete);
 
         btnDelete.setOnClickListener(new View.OnClickListener() {
@@ -203,6 +208,9 @@ public class TermController  extends AppCompatActivity {
             });
         }
     }
+
+
+
     private void launchCourseScreen(Course course, int position) {
         Intent intent = new Intent(this, CourseController.class);
         intent.putExtra("isNew", false);

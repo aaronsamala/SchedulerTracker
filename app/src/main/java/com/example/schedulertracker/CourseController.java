@@ -1,6 +1,9 @@
 package com.example.schedulertracker;
 
+import android.app.AlarmManager;
 import android.app.DatePickerDialog;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -16,7 +19,9 @@ import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.List;
@@ -32,6 +37,9 @@ public class CourseController  extends AppCompatActivity {
     private Button btnDeleteNote;
     private Button btnSaveAssessment;
     private Button btnDeleteAssessment;
+    private Button btnSetCourseAlarm, btnSetAssessmentAlarm;
+
+
     DBDataSource datasource;
     Long termID;
     Long courseID;
@@ -50,6 +58,7 @@ public class CourseController  extends AppCompatActivity {
     EditText courseStartDate, courseEndDate, assessmentDueDate, assessmentGoalDate;
     String myFormat = "MM/dd/yyyy";
     SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
+    Intent intent;
     /*
 
 
@@ -69,7 +78,16 @@ public class CourseController  extends AppCompatActivity {
         assessmentGoalDate  = (EditText) findViewById(R.id.editGoalDate);
 
         setDatePickers();
-
+        btnSetCourseAlarm = (Button) findViewById(R.id.btnSetCourseAlarm);
+        btnSetCourseAlarm.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) { setCourseAlarm(); }
+        });
+        btnSetAssessmentAlarm = (Button) findViewById(R.id.btnSetAssessmentAlert);
+        btnSetAssessmentAlarm.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) { setAssessmentAlarm(); }
+        });
 
         courseMentor = new CourseMentor();
         courseValues = datasource.getAllCourses();
@@ -79,7 +97,7 @@ public class CourseController  extends AppCompatActivity {
         }
 
         Log.d("ListCourseEnd","End Of Course List Test");
-        Intent intent = getIntent();
+        intent = getIntent();
 
         isNew = intent.getBooleanExtra("isNew", true);
 
@@ -104,9 +122,9 @@ public class CourseController  extends AppCompatActivity {
                     EditText edit = (EditText)findViewById(R.id.editCourseTitle);
                     edit.setText(course.getTitle());
                     edit = (EditText)findViewById(R.id.editEndDate);
-                    edit.setText(course.getTitle());
+                    edit.setText(course.getAnticipatedEndDate());
                     edit = (EditText)findViewById(R.id.editCourseStatus);
-                    edit.setText(course.getTitle());
+                    edit.setText(course.getStatus());
                     edit = (EditText)findViewById(R.id.editStartDate);
                     edit.setText(course.getStartDate());
                     termID = course.getTermID();
@@ -222,6 +240,112 @@ public class CourseController  extends AppCompatActivity {
             }
         });
 
+    }
+
+    void setAssessmentAlarm(){
+
+        if (assessment==null){
+            String msg = "Error: Please save the assessment before attempting to schedule the notification.";
+
+            Toast.makeText(getBaseContext(), msg, Toast.LENGTH_SHORT).show();
+        } else if (assessment!=null){
+
+            EditText editGoalDate = (EditText) findViewById(R.id.editGoalDate);
+
+            String goalDate = editGoalDate.getText().toString();
+            Log.d("assessment", "setAssessmentAlarm: is not null " + goalDate);
+            AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+
+            Intent notificationIntent = new Intent(CourseController.this, AssessmentGoalAlarmReceiver.class);
+
+            String parseString = String.valueOf(assessment.assessmentID);
+            int requestCode = Integer.parseInt(parseString);
+            PendingIntent broadcast = PendingIntent.getBroadcast(CourseController.this, requestCode, notificationIntent, 0);
+
+            Calendar cal = Calendar.getInstance();
+            try {
+                cal.setTime(sdf.parse(goalDate));
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+
+            cal.add(Calendar.DAY_OF_MONTH,-7);
+
+            alarmManager.setExact(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(), broadcast);
+        }
+
+    }
+
+    void setCourseAlarm(){
+
+        if (isNew){
+            String msg = "Error: Please save the course before attempting to schedule the notification.";
+
+            Toast.makeText(getBaseContext(), msg, Toast.LENGTH_SHORT).show();
+        }else if (!isNew) {
+            //start
+            String startDate = courseStartDate.getText().toString();
+            String[] parseStart = startDate.split("/");
+            String startMonthString = parseStart[0];
+            int startMonth = Integer.parseInt(startMonthString);
+            String startDayString = parseStart[1];
+            int startDay = Integer.parseInt(startDayString);
+            String startYearString = parseStart[2];
+            int startYear = Integer.parseInt(startYearString);
+
+            Log.d("CourseStart", "setCourseAlarm: " + startMonth + ", " + startDay + ", " + startYear);
+
+            AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+
+            //Intent notificationIntent = new Intent("android.media.action.DISPLAY_COURSE_START");
+            Intent notificationIntent = new Intent(CourseController.this, CourseStartAlarmReceiver.class);
+            //intent.setAction("android.media.action.DISPLAY_COURSE_START");
+            //notificationIntent.addCategory("android.intent.category.DEFAULT");
+            //intent.addCategory("android.intent.category.DEFAULT");
+
+            String parseString = String.valueOf(courseID);
+            int requestCode = Integer.parseInt(parseString);
+            PendingIntent broadcast = PendingIntent.getBroadcast(CourseController.this, requestCode, notificationIntent, 0);
+
+            Calendar cal = Calendar.getInstance();
+            try {
+                cal.setTime(sdf.parse(startDate));
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+
+            cal.add(Calendar.DAY_OF_MONTH,-7);
+            alarmManager.setExact(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(), broadcast);
+
+
+            //courseEnd
+
+            String endDate = courseEndDate.getText().toString();
+
+
+            AlarmManager alarmEndManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+
+            Intent notificationEndIntent = new Intent(CourseController.this, CourseEndAlarmReceiver.class);
+            //Intent notificationEndIntent = new Intent(this, CourseEndAlarmReceiver.class);
+            notificationEndIntent.setAction("android.media.action.DISPLAY_COURSE_END");
+            notificationEndIntent.addCategory("android.intent.category.DEFAULT");
+
+
+            PendingIntent endBroadcast = PendingIntent.getBroadcast(this, requestCode, notificationEndIntent, 0);
+
+            Calendar endCal = Calendar.getInstance();
+            try {
+                endCal.setTime(sdf.parse(endDate));
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+
+            endCal.add(Calendar.DAY_OF_MONTH,-7);
+            alarmEndManager.setExact(AlarmManager.RTC_WAKEUP, endCal.getTimeInMillis(), endBroadcast);
+
+
+
+        }
     }
 
     void setDatePickers(){

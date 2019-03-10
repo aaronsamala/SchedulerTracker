@@ -21,6 +21,20 @@
         </activity>
         <activity android:name=".TermController"></activity>
         <activity android:name=".CourseController"></activity>
+        <receiver android:name=".CourseStartAlarmReceiver"
+            android:enabled="true"
+            android:exported="true">
+        </receiver>
+        <receiver android:name=".AssessmentGoalAlarmReceiver"
+        android:enabled="true"
+        android:exported="true">
+        </receiver>
+        <receiver android:name=".CourseEndAlarmReceiver">
+            <intent-filter>
+                <action android:name="android.media.action.DISPLAY_COURSE_END" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>

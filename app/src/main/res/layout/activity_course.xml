@@ -129,6 +129,13 @@
                     android:text="@string/Save" />
 
                 <Button
+                    android:id="@+id/btnSetCourseAlarm"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Set Alarm" />
+
+                <Button
                     android:id="@+id/btnSaveAndExit"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -454,6 +461,13 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="Save Assessment" />
+
+                <Button
+                    android:id="@+id/btnSetAssessmentAlert"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Create Alert" />
 
                 <Button
                     android:id="@+id/btnDeleteAssessment"
