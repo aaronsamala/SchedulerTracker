@@ -17,6 +17,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -244,7 +245,7 @@ public class TermController  extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent dataIntent) {
         super.onActivityResult(requestCode, resultCode, dataIntent);
-        Log.d("ActResult", "Started");
+        Log.d("TermActResult", "Started");
         switch (requestCode)
         {
             // This request code is set by startActivityForResult(intent, REQUEST_CODE_1) method.
@@ -271,14 +272,38 @@ public class TermController  extends AppCompatActivity {
         startActivityForResult(intent, COURSE_REQUEST_CODE);
     }
     void deleteTerm(){
-        Log.d("TermController", "addTermStart_!isNew_delete");
-        Intent intent = new Intent();
-        intent.putExtra("isNew", false);
-        intent.putExtra("termID", termID);
-        intent.putExtra("position", position);
-        intent.putExtra("action", "delete");
-        setResult(RESULT_OK, intent);
-        finish();
+
+        if (courseValues!=null){
+
+
+            if (courseValues.size()<1) {
+
+
+                Log.d("TermController", "addTermStart_!isNew_delete");
+                Intent intent = new Intent();
+                intent.putExtra("isNew", false);
+                intent.putExtra("termID", termID);
+                intent.putExtra("position", position);
+                intent.putExtra("action", "delete");
+                setResult(RESULT_OK, intent);
+                finish();
+            } else if(courseValues.size()>0){
+                String msg = "Error: Unable to delete term because this term has courses.  Delete all courses for this term first.";
+                Toast.makeText(getBaseContext(), msg, Toast.LENGTH_SHORT).show();
+            }
+        } else if (courseValues==null) {
+
+
+            Log.d("TermController", "addTermStart_!isNew_delete");
+            Intent intent = new Intent();
+            intent.putExtra("isNew", false);
+            intent.putExtra("termID", termID);
+            intent.putExtra("position", position);
+            intent.putExtra("action", "delete");
+            setResult(RESULT_OK, intent);
+            finish();
+        }
+
     }
     void addTerm(){
         if (isNew) {

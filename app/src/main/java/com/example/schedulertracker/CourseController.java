@@ -29,7 +29,7 @@ import java.util.Locale;
 
 public class CourseController  extends AppCompatActivity {
     private Button btnCancel;
-    private Button btnSave;
+    private Button btnSave, btnDeleteCourse;
     private Button btnSaveCourseMentor;
     private Button btnDeleteCourseMentor;
     private Button btnSaveNote;
@@ -88,6 +88,16 @@ public class CourseController  extends AppCompatActivity {
             @Override
             public void onClick(View view) { setAssessmentAlarm(); }
         });
+        btnDeleteCourse = (Button) findViewById(R.id.btnDelete);
+
+        btnDeleteCourse.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                deleteCourse();
+
+            }
+        });
 
         courseMentor = new CourseMentor();
         courseValues = datasource.getAllCourses();
@@ -135,6 +145,7 @@ public class CourseController  extends AppCompatActivity {
             loadCourseMentor();
             loadNote();
             loadAssessments();
+            btnDeleteCourse.setEnabled(true);
         }
 
 
@@ -160,6 +171,8 @@ public class CourseController  extends AppCompatActivity {
 
             }
         });
+
+
 
         btnSaveCourseMentor = (Button) findViewById(R.id.btnSaveCourseMentor);
 
@@ -274,6 +287,14 @@ public class CourseController  extends AppCompatActivity {
             alarmManager.setExact(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(), broadcast);
         }
 
+    }
+
+    void deleteCourse(){
+
+        Intent intent = new Intent();
+        setResult(RESULT_OK, intent);
+        datasource.deleteCourse(courseID);
+        finish();
     }
 
     void setCourseAlarm(){
@@ -711,13 +732,14 @@ this.assessmentID = 0L;
             String tmpCourseStatus = edit.getText().toString();
 
 
-            datasource.createCourse(
+            Course tmpCourse = datasource.createCourse(
                     termID,
                     tmpCourseTitle,
                     tmpStartDate,
                     tmpEndDate,
                     tmpCourseStatus
             );
+            courseID = tmpCourse.getCourseID();
         } else if (!isNew){
             EditText edit = (EditText) findViewById(R.id.editCourseTitle);
             String tmpCourseTitle = edit.getText().toString();
@@ -750,6 +772,8 @@ this.assessmentID = 0L;
             );
 
         }
+
+        btnDeleteCourse.setEnabled(true);
     }
     public static void setListViewHeightBasedOnChildren(ListView listView) {
         ListAdapter listAdapter = listView.getAdapter();
