@@ -19,7 +19,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".TermController"></activity>
+        <activity android:name=".TermController"
+            android:label="Terms"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
         <activity android:name=".CourseController"></activity>
         <receiver android:name=".CourseStartAlarmReceiver"
             android:enabled="true"
