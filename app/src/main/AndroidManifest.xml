@@ -20,9 +20,11 @@
             </intent-filter>
         </activity>
         <activity android:name=".TermController"
-            android:label="Terms"
+            android:label="Term"
             android:theme="@style/AppTheme.NoActionBar"></activity>
-        <activity android:name=".CourseController"></activity>
+        <activity android:name=".CourseController"
+            android:label="Course"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
         <receiver android:name=".CourseStartAlarmReceiver"
             android:enabled="true"
             android:exported="true">

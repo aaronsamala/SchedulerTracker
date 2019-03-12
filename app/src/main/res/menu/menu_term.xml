@@ -2,12 +2,43 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.example.schedulertracker.TermController">
+
     <item
-        android:id="@+id/action_settings"
-        android:orderInCategory="100"
-        android:title="@string/action_settings"
-        app:showAsAction="never" />
-    <item android:id="@+id/action_settings2"
-        android:title="@string/action_settings"
+        android:id="@+id/save_submit"
+        android:title="Save/Submit"
         app:showAsAction="never"/>
+    <item
+        android:id="@+id/delete_term"
+        android:title="Delete Term"
+        app:showAsAction="never"
+        android:enabled="false"/>
+    <item
+        android:id="@+id/add_course"
+        android:title="Add Course"
+        app:showAsAction="never"
+        android:enabled="false"/>
+
+
+    <item
+        android:id="@+id/set_course_alarm"
+        android:title="Set course alarms"
+        app:showAsAction="never"
+        android:visible="false"/>
+
+    <item
+        android:id="@+id/send_note"
+        android:title="Send Note"
+        app:showAsAction="never"
+        android:visible="false"/>
+    <item
+        android:id="@+id/set_assessment_alarm"
+        android:title="Set assessment alarm"
+        app:showAsAction="never"
+        android:visible="false"/>
+    <item
+        android:id="@+id/cancel"
+        android:title="Cancel"
+        app:showAsAction="never"
+        android:enabled="true"
+        android:visible="false"/>
 </menu>

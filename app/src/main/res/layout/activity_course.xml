@@ -8,11 +8,30 @@
     tools:context=".CourseController"
     >
 
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/appBarLayout4"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/AppTheme.AppBarOverlay"
+        app:layout_constraintTop_toTopOf="parent"
+        >
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar3"
+            app:title="Course"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            app:popupTheme="@style/AppTheme.PopupOverlay" />
+
+    </android.support.design.widget.AppBarLayout>
+
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:layout_editor_absoluteX="0dp"
-        tools:layout_editor_absoluteY="0dp" >
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/appBarLayout4"
+        tools:layout_editor_absoluteX="0dp">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -66,9 +85,9 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:ems="10"
+                    android:focusable="false"
                     android:hint="@string/month_day_year"
-                    android:inputType="date"
-                    android:focusable="false"/>
+                    android:inputType="date" />
             </LinearLayout>
 
             <LinearLayout
@@ -89,9 +108,9 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:ems="10"
+                    android:focusable="false"
                     android:hint="@string/month_day_year"
-                    android:inputType="date"
-                    android:focusable="false"/>
+                    android:inputType="date" />
             </LinearLayout>
 
             <LinearLayout
@@ -126,28 +145,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="@string/Save" />
-
-                <Button
-                    android:id="@+id/btnSetCourseAlarm"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Set Alarm" />
-
-                <Button
-                    android:id="@+id/btnSaveAndExit"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="@string/save_and_exit" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                    android:text="Save Course" />
 
                 <Button
                     android:id="@+id/btnDelete"
@@ -155,15 +153,9 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:enabled="false"
-                    android:text="delete"
+                    android:text="delete course"
                     android:visibility="visible" />
 
-                <Button
-                    android:id="@+id/btnCancel"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="@string/cancel" />
             </LinearLayout>
 
             <LinearLayout
@@ -284,7 +276,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal" >
+                android:orientation="horizontal">
 
                 <EditText
                     android:id="@+id/editNote"
@@ -306,13 +298,6 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="Save Note" />
-
-                <Button
-                    android:id="@+id/btnSendNotes"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Send Note" />
 
                 <Button
                     android:id="@+id/btnClearNotes"
@@ -422,9 +407,9 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:ems="10"
+                    android:focusable="false"
                     android:hint="@string/month_day_year"
-                    android:inputType="date"
-                    android:focusable="false"/>
+                    android:inputType="date" />
             </LinearLayout>
 
             <LinearLayout
@@ -445,9 +430,9 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:ems="10"
+                    android:focusable="false"
                     android:hint="@string/month_day_year"
-                    android:inputType="date"
-                    android:focusable="false"/>
+                    android:inputType="date" />
             </LinearLayout>
 
             <LinearLayout
@@ -461,13 +446,6 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="Save Assessment" />
-
-                <Button
-                    android:id="@+id/btnSetAssessmentAlert"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Create Alert" />
 
                 <Button
                     android:id="@+id/btnDeleteAssessment"

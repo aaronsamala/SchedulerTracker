@@ -7,7 +7,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -28,16 +32,13 @@ import java.util.List;
 import java.util.Locale;
 
 public class CourseController  extends AppCompatActivity {
-    private Button btnCancel;
     private Button btnSave, btnDeleteCourse;
     private Button btnSaveCourseMentor;
     private Button btnDeleteCourseMentor;
     private Button btnSaveNote;
-    private Button btnSendNote;
     private Button btnDeleteNote;
     private Button btnSaveAssessment;
     private Button btnDeleteAssessment;
-    private Button btnSetCourseAlarm, btnSetAssessmentAlarm;
 
 
     DBDataSource datasource;
@@ -59,6 +60,7 @@ public class CourseController  extends AppCompatActivity {
     String myFormat = "MM/dd/yyyy";
     SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
     Intent intent;
+    Menu menu;
     /*
 
 
@@ -68,6 +70,10 @@ public class CourseController  extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_course);
+        Toolbar toolbar = findViewById(R.id.toolbar3);
+        setSupportActionBar(toolbar);
+
+        invalidateOptionsMenu();
         datasource = new DBDataSource(this);
         datasource.open();
         calendar= Calendar.getInstance();
@@ -78,16 +84,8 @@ public class CourseController  extends AppCompatActivity {
         assessmentGoalDate  = (EditText) findViewById(R.id.editGoalDate);
 
         setDatePickers();
-        btnSetCourseAlarm = (Button) findViewById(R.id.btnSetCourseAlarm);
-        btnSetCourseAlarm.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) { setCourseAlarm(); }
-        });
-        btnSetAssessmentAlarm = (Button) findViewById(R.id.btnSetAssessmentAlert);
-        btnSetAssessmentAlarm.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) { setAssessmentAlarm(); }
-        });
+
+
         btnDeleteCourse = (Button) findViewById(R.id.btnDelete);
 
         btnDeleteCourse.setOnClickListener(new View.OnClickListener() {
@@ -154,12 +152,6 @@ public class CourseController  extends AppCompatActivity {
         Log.d("ListCourseEnd","End Of Course List Test");
 
 
-        btnCancel = (Button) findViewById(R.id.btnCancel);
-
-        btnCancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) { finish(); }
-        });
 
         btnSave = (Button) findViewById(R.id.btnSave);
 
@@ -207,16 +199,7 @@ public class CourseController  extends AppCompatActivity {
             }
         });
 
-        btnSendNote = (Button) findViewById(R.id.btnSendNotes);
 
-        btnSendNote.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                sendNote();
-
-            }
-        });
 
         btnDeleteNote = (Button) findViewById(R.id.btnClearNotes);
 
@@ -255,6 +238,46 @@ public class CourseController  extends AppCompatActivity {
 
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_term, menu);
+        this.menu = menu;
+        menu.findItem(R.id.save_submit).setVisible(false);
+        menu.findItem(R.id.delete_term).setVisible(false);
+        menu.findItem(R.id.add_course).setVisible(false);
+
+        menu.findItem(R.id.set_course_alarm).setVisible(true);
+        menu.findItem(R.id.send_note).setVisible(true);
+        menu.findItem(R.id.set_assessment_alarm).setVisible(true);
+
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            // action with ID action_refresh was selected
+            case R.id.set_course_alarm:
+                setCourseAlarm();
+                break;
+            case R.id.send_note:
+                sendNote();
+                break;
+            // action with ID action_settings was selected
+            case R.id.set_assessment_alarm:
+                setAssessmentAlarm();
+                break;
+            case R.id.cancel:
+                finish();
+
+                break;
+            default:
+                break;
+        }
+
+        return true;
+    }
     void setAssessmentAlarm(){
 
         if (assessment==null){
@@ -473,21 +496,7 @@ public class CourseController  extends AppCompatActivity {
 
 
     }
-    void setCourseStartDate(){
 
-    }
-
-    void setCourseEndDate(){
-
-    }
-
-    void setAssessmentDueDate(){
-
-    }
-
-    void setAssessmentGoalDate(){
-
-    }
     void sendNote(  ){
 
 
@@ -774,6 +783,8 @@ this.assessmentID = 0L;
         }
 
         btnDeleteCourse.setEnabled(true);
+        String msg = "Course saved.";
+        Toast.makeText(getBaseContext(), msg, Toast.LENGTH_SHORT).show();
     }
     public static void setListViewHeightBasedOnChildren(ListView listView) {
         ListAdapter listAdapter = listView.getAdapter();

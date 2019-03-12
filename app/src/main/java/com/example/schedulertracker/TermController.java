@@ -1,9 +1,6 @@
 package com.example.schedulertracker;
 
-import android.app.AlarmManager;
 import android.app.DatePickerDialog;
-import android.app.PendingIntent;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -11,10 +8,10 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -28,15 +25,11 @@ import java.util.List;
 import java.util.Locale;
 
 public class TermController  extends AppCompatActivity {
-    private Button btnCancel;
-    private Button btnSubmit;
-    private Button btnDelete;
     MainActivity mainActivity;
     boolean isNew = true;
     Long termID;
     int position;
 
-    private Button btnAddCourse;
     private DBDataSource datasource;
     List<Course> courseValues;
     CourseController courseController;
@@ -48,6 +41,7 @@ public class TermController  extends AppCompatActivity {
     Calendar calendar;
     EditText termStartDate, termEndDate;
     //int year, month, day;
+    MenuItem addCourse;
 
 
 
@@ -57,7 +51,10 @@ public class TermController  extends AppCompatActivity {
         setContentView(R.layout.activity_term);
         Toolbar toolbar = findViewById(R.id.toolbar2);
         setSupportActionBar(toolbar);
+        invalidateOptionsMenu();
 
+
+        //addCourse.setVisible(false);
         //mainActivity = new MainActivity();
         //mainActivity.setTermController(this);
         //datasource = new DBDataSource(this);
@@ -125,13 +122,6 @@ public class TermController  extends AppCompatActivity {
 
 
 
-        btnDelete = (Button) findViewById(R.id.btnDelete);
-
-        btnDelete.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) { deleteTerm(); }
-        });
-        btnDelete.setEnabled(false);
 
         if (!isNew){
             EditText edit = (EditText)findViewById(R.id.editTermName);
@@ -143,7 +133,6 @@ public class TermController  extends AppCompatActivity {
             termID = intent.getLongExtra("termID",999);
             Log.d("TermID_ONLOAD", termID.toString());
             position = intent.getIntExtra("position",999);
-            btnDelete.setEnabled(true);
 
 
             //MainActivity getContext = (MainActivity)getApplicationContext();
@@ -156,31 +145,9 @@ public class TermController  extends AppCompatActivity {
             //filter for only the applicable courses
             //filterCourses();
             setCourseList();
-            btnAddCourse = (Button) findViewById(R.id.btnAddCourse);
 
-            btnAddCourse.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) { btnAddCourse(); }
-            });
         }
 
-        btnCancel = (Button) findViewById(R.id.btnCancel);
-
-        btnCancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) { finish(); }
-        });
-
-        btnSubmit = (Button) findViewById(R.id.btnSubmit);
-
-        btnSubmit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                addTerm();
-
-            }
-        });
 
 
 
@@ -221,6 +188,43 @@ public class TermController  extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_term, menu);
+        menu.findItem(R.id.save_submit).setVisible(true);
+        menu.findItem(R.id.delete_term).setVisible(true);
+        menu.findItem(R.id.add_course).setVisible(true);
+
+        menu.findItem(R.id.set_course_alarm).setVisible(false);
+        menu.findItem(R.id.send_note).setVisible(false);
+        menu.findItem(R.id.set_assessment_alarm).setVisible(false);
+        if (!isNew) {
+            menu.findItem(R.id.add_course).setEnabled(true);
+            menu.findItem(R.id.delete_term).setEnabled(true);
+        }
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            // action with ID action_refresh was selected
+            case R.id.save_submit:
+                addTerm();
+                break;
+            case R.id.add_course:
+                btnAddCourse();
+                break;
+            // action with ID action_settings was selected
+            case R.id.delete_term:
+                deleteTerm();
+
+                break;
+            case R.id.cancel:
+                finish();
+
+                break;
+            default:
+                break;
+        }
+
         return true;
     }
     private void launchCourseScreen(Course course, int position) {
