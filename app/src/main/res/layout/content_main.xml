@@ -21,6 +21,12 @@
             android:layout_height="wrap_content"
             android:text="Add Term" />
 
+        <TextView
+            android:id="@+id/textView3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="List of Terms:" />
+
         <ListView
             android:id="@+id/listTerms"
             android:layout_width="match_parent"

@@ -40,5 +40,5 @@
         android:title="Cancel"
         app:showAsAction="never"
         android:enabled="true"
-        android:visible="false"/>
+        android:visible="true"/>
 </menu>
