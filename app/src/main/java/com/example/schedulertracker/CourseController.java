@@ -45,6 +45,7 @@ public class CourseController  extends AppCompatActivity {
     Long termID;
     Long courseID;
     boolean isNew = true;
+    boolean isNewAssessment = true;
     List<Course> courseValues;
     //ListView courseListView;
     CourseMentor courseMentor;
@@ -280,11 +281,11 @@ public class CourseController  extends AppCompatActivity {
     }
     void setAssessmentAlarm(){
 
-        if (assessment==null){
+        if (isNewAssessment){
             String msg = "Error: Please save the assessment before attempting to schedule the notification.";
 
             Toast.makeText(getBaseContext(), msg, Toast.LENGTH_SHORT).show();
-        } else if (assessment!=null){
+        } else if (!isNewAssessment){
 
             EditText editGoalDate = (EditText) findViewById(R.id.editGoalDate);
 
@@ -310,6 +311,8 @@ public class CourseController  extends AppCompatActivity {
             alarmManager.setExact(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(), broadcast);
         }
 
+        String msg = "Assessment alarm saved.";
+        Toast.makeText(getBaseContext(), msg, Toast.LENGTH_SHORT).show();
     }
 
     void deleteCourse(){
@@ -318,6 +321,8 @@ public class CourseController  extends AppCompatActivity {
         setResult(RESULT_OK, intent);
         datasource.deleteCourse(courseID);
         finish();
+        String msg = "Course deleted.";
+        Toast.makeText(getBaseContext(), msg, Toast.LENGTH_SHORT).show();
     }
 
     void setCourseAlarm(){
@@ -389,6 +394,8 @@ public class CourseController  extends AppCompatActivity {
 
 
 
+            String msg = "Course alarms saved.";
+            Toast.makeText(getBaseContext(), msg, Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -594,6 +601,7 @@ public class CourseController  extends AppCompatActivity {
 
                     assessment = (Assessment) assessmentValues.get(position);
                     loadAssessment();
+                    isNewAssessment = false;
                     //final String item = assessment.getTitle() + " - " + assessment.getTermID();
                     //String item = ((TextView)view).getText().toString();
 
@@ -638,6 +646,8 @@ public class CourseController  extends AppCompatActivity {
             Long courseMentorID = courseMentor.getCourseMentorID();
             courseMentor = datasource.modCourseMentor(courseMentorID, courseMentor.getCourseID(), name, mentorPhone, email);
         }
+        String msg = "Course Mentor saved.";
+        Toast.makeText(getBaseContext(), msg, Toast.LENGTH_SHORT).show();
     }
 
     void deleteCourseMentor(){
@@ -650,6 +660,8 @@ public class CourseController  extends AppCompatActivity {
             edit.setText("");
             edit = (EditText) findViewById(R.id.editCourseMentorPhone);
             edit.setText("");
+            String msg = "Course Mentor deleted.";
+            Toast.makeText(getBaseContext(), msg, Toast.LENGTH_SHORT).show();
 
         }
 
@@ -660,7 +672,16 @@ public class CourseController  extends AppCompatActivity {
             EditText editNote = (EditText) findViewById(R.id.editNote);
             String noteString = editNote.getText().toString();
             note = datasource.createNote(noteString, courseID);
+            String msg = "Note saved.";
+            Toast.makeText(getBaseContext(), msg, Toast.LENGTH_SHORT).show();
+        } else if (note != null) {
+            EditText editNote = (EditText) findViewById(R.id.editNote);
+            String noteString = editNote.getText().toString();
+            datasource.modNote(note.getNoteID(), note.getNote_CourseID(), noteString);
+            String msg = "Note saved.";
+            Toast.makeText(getBaseContext(), msg, Toast.LENGTH_SHORT).show();
         }
+
 
     }
 
@@ -669,6 +690,8 @@ public class CourseController  extends AppCompatActivity {
             datasource.modNote(note.getNoteID(), note.getNote_CourseID(), "");
             EditText editNote = (EditText) findViewById(R.id.editNote);
             editNote.setText("");
+            String msg = "Note deleted.";
+            Toast.makeText(getBaseContext(), msg, Toast.LENGTH_SHORT).show();
         }
 
     }
@@ -680,8 +703,10 @@ this.assessmentID = 0L;
         this.title = "";
         this.assessmentType = "";
  */
+
     void saveAssessment(){
-        if (assessment==null) {
+
+        if (isNewAssessment) {
 
 
             EditText editTitle = (EditText) findViewById(R.id.editAssessmentTitle);
@@ -693,9 +718,9 @@ this.assessmentID = 0L;
             EditText editGoalDate = (EditText) findViewById(R.id.editGoalDate);
             String goalDate = editGoalDate.getText().toString();
 
-            datasource.createAssessment(courseID, title, type, dueDate, goalDate);
+            assessment =  datasource.createAssessment(courseID, title, type, dueDate, goalDate);
 
-        } else if (assessment!=null){
+        } else if (!isNewAssessment){
             EditText editTitle = (EditText) findViewById(R.id.editAssessmentTitle);
             String title = editTitle.getText().toString();
             EditText editType = (EditText) findViewById(R.id.editAssessmentType);
@@ -707,14 +732,37 @@ this.assessmentID = 0L;
 
             datasource.modAssessment(assessment.getAssessmentID(), courseID, title, type, dueDate, goalDate);
         }
-        assessment = null;
+        isNewAssessment = false;
+        String msg = "Assessment saved.";
+        Toast.makeText(getBaseContext(), msg, Toast.LENGTH_SHORT).show();
+        EditText editAssessmentTitle = (EditText) findViewById(R.id.editAssessmentTitle);
+        EditText editAssessmentType = (EditText) findViewById(R.id.editAssessmentType);
+        EditText editAssessmentDue = (EditText) findViewById(R.id.editDueDate);
+        EditText editAssessmentGoal = (EditText) findViewById(R.id.editGoalDate);
+        editAssessmentTitle.setText("");
+        editAssessmentType.setText("");
+        editAssessmentDue.setText("");
+        editAssessmentGoal.setText("");
+        //assessment = null;
     }
 
     void deleteAssessment(){
 
-        if (assessment != null) {
+        if (!isNewAssessment) {
             datasource.deleteAssessment(assessment.getAssessmentID());
+            EditText editAssessmentTitle = (EditText) findViewById(R.id.editAssessmentTitle);
+            EditText editAssessmentType = (EditText) findViewById(R.id.editAssessmentType);
+            EditText editAssessmentDue = (EditText) findViewById(R.id.editDueDate);
+            EditText editAssessmentGoal = (EditText) findViewById(R.id.editGoalDate);
+            editAssessmentTitle.setText("");
+            editAssessmentType.setText("");
+            editAssessmentDue.setText("");
+            editAssessmentGoal.setText("");
+
+            String msg = "Assessment deleted.";
+            Toast.makeText(getBaseContext(), msg, Toast.LENGTH_SHORT).show();
         }
+
     }
 
     void addCourse(){
@@ -749,6 +797,7 @@ this.assessmentID = 0L;
                     tmpCourseStatus
             );
             courseID = tmpCourse.getCourseID();
+            isNew = false;
         } else if (!isNew){
             EditText edit = (EditText) findViewById(R.id.editCourseTitle);
             String tmpCourseTitle = edit.getText().toString();
