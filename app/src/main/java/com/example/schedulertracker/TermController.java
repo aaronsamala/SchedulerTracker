@@ -271,9 +271,6 @@ public class TermController  extends AppCompatActivity {
         }
 
     }
-    void setMainActivity(MainActivity mainActivity){
-        this.mainActivity = mainActivity;
-    }
 
     void setTermStartDate(){
         String myFormat = "MM/dd/yyyy"; //In which you need put here
