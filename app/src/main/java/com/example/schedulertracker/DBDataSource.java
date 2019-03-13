@@ -60,9 +60,6 @@ public class DBDataSource {
             DBHelper.COL_GOAL_DATE,
     };
 
-
-
-
     public DBDataSource(Context context) {
         dbHelper = new DBHelper(context);
     }
@@ -98,14 +95,6 @@ public class DBDataSource {
         values.put(DBHelper.COL_NOTE_COURSE_ID, courseID);
         db.update(DBHelper.TBL_NOTES, values, DBHelper.COL_NOTE_ID
                 + "=" + id, null);
-        /*
-        Cursor cursor = db.query(DBHelper.TBL_NOTES,
-                allNoteCols, DBHelper.COL_NOTE_ID + " = " + insertId, null,
-                null, null, null);
-        cursor.moveToFirst();
-        Note newNote = cursorToNote(cursor);
-        cursor.close();
-        */
         Note newNote = getNote(id);
         return newNote;
     }
@@ -118,7 +107,6 @@ public class DBDataSource {
     }
 
     public void deleteNote(Long id) {
-        //long id = note.getNoteID();
         System.out.println("Note deleted with id: " + id);
         db.delete(DBHelper.TBL_NOTES, DBHelper.COL_NOTE_ID
                 + " = " + id, null);
@@ -144,7 +132,6 @@ public class DBDataSource {
             notes.add(note);
             cursor.moveToNext();
         }
-        // make sure to close the cursor
         cursor.close();
         return notes;
     }
@@ -180,16 +167,6 @@ public class DBDataSource {
         values.put(DBHelper.COL_TERM_ID, termID);
         db.update(DBHelper.TBL_TERMS, values, DBHelper.COL_TERM_ID
                 + "=" + termID, null);
-        /*
-        long insertId = db.insert(DBHelper.TBL_TERMS, null,
-                values);
-        Cursor cursor = db.query(DBHelper.TBL_TERMS,
-                allTermCols, DBHelper.COL_TERM_ID + " = " + insertId, null,
-                null, null, null);
-        cursor.moveToFirst();
-        Term newTerm = cursorToTerm(cursor);
-        cursor.close();
-        */
         Term newTerm = new Term();
         return newTerm;
     }
@@ -221,7 +198,6 @@ public class DBDataSource {
             terms.add(term);
             cursor.moveToNext();
         }
-        // make sure to close the cursor
         cursor.close();
         return terms;
     }
@@ -293,7 +269,6 @@ public class DBDataSource {
             courses.add(course);
             cursor.moveToNext();
         }
-        // make sure to close the cursor
         cursor.close();
         return courses;
     }
@@ -310,7 +285,6 @@ public class DBDataSource {
             courses.add(course);
             cursor.moveToNext();
         }
-        // make sure to close the cursor
         cursor.close();
         return courses;
     }
@@ -390,7 +364,6 @@ public class DBDataSource {
         cursor.moveToFirst();
         while (!cursor.isAfterLast()) {
             courseMentor = cursorToCourseMentor(cursor);
-            //courseMentors.add(courseMentor);
             cursor.moveToNext();
         }
         cursor.close();

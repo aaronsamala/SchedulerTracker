@@ -21,10 +21,6 @@ public class DBHelper extends SQLiteOpenHelper {
     public static final String COL_TERM_END_DATE = "endDate";
     //End Term DB items
 
-    /*
-    Integer courseID, termID, startDate, anticipatedEndDate;
-    String title, status, notes;
-     */
   //Begin Course DB items
     public static final String TBL_COURSES = "courses";
     public static final String COL_COURSE_ID = "courseID";
@@ -64,7 +60,7 @@ public class DBHelper extends SQLiteOpenHelper {
             + COL_NOTE_COURSE_ID + " integer not null,"
             + COL_NOTE + " text not null)"
             ;
-    private static final String DB_TERMS_CREATE = //DB_NOTES_CREATE +
+    private static final String DB_TERMS_CREATE =
             //Begin Term create
             " create table "
                     + TBL_TERMS + "( " + COL_TERM_ID + " integer primary key autoincrement, "
@@ -74,7 +70,7 @@ public class DBHelper extends SQLiteOpenHelper {
             ")";
             //End Term create
 
-    private static final String DB_COURSES_CREATE = //DB_TERMS_CREATE +
+    private static final String DB_COURSES_CREATE =
             //Begin Course create
             " create table "
                     + TBL_COURSES + "( " + COL_COURSE_ID + " integer primary key autoincrement, "
@@ -86,7 +82,7 @@ public class DBHelper extends SQLiteOpenHelper {
                     + ")";
             //End Course create
 
-    private static final String DB_COURSE_MENTORS_CREATE = //DB_COURSES_CREATE +
+    private static final String DB_COURSE_MENTORS_CREATE =
             //Begin CourseMentors create
             " create table "
                     + TBL_COURSE_MENTORS + "( " + COL_COURSE_MENTOR_ID + " integer primary key autoincrement, "
@@ -97,7 +93,7 @@ public class DBHelper extends SQLiteOpenHelper {
                     + ")";
             //End CourseMentors create
     
-    private static final String DB_ASSESSMENTS_CREATE = //DB_COURSE_MENTORS_CREATE +
+    private static final String DB_ASSESSMENTS_CREATE =
             //Begin CourseMentors create
             " create table "
                     + TBL_ASSESSMENTS + "( " + COL_ASSESSMENT_ID + " integer primary key autoincrement, "
@@ -122,19 +118,12 @@ public class DBHelper extends SQLiteOpenHelper {
     }
     @Override
     public void onCreate(SQLiteDatabase db) {
-        Log.d("DBCreate","Start");
 
-        //db.execSQL(DB_ASSESSMENTS_CREATE);
-        ///*
-        //db.execSQL(DB_TERMS_CREATE);
         db.execSQL(DB_NOTES_CREATE);
         db.execSQL(DB_TERMS_CREATE);
         db.execSQL(DB_COURSES_CREATE);
         db.execSQL(DB_COURSE_MENTORS_CREATE);
         db.execSQL(DB_ASSESSMENTS_CREATE);
-        //*/
-        Log.d("DBCreate","End");
-        //addExtraTables(db);
 
     }
 

@@ -47,10 +47,8 @@ public class CourseController  extends AppCompatActivity {
     boolean isNew = true;
     boolean isNewAssessment = true;
     List<Course> courseValues;
-    //ListView courseListView;
     CourseMentor courseMentor;
     Note note;
-    int position;
     Assessment assessment;
     List<Assessment> assessmentValues;
     ListView assessmentListView;
@@ -62,11 +60,7 @@ public class CourseController  extends AppCompatActivity {
     SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
     Intent intent;
     Menu menu;
-    /*
 
-
-************NEED TO add ModNote feature; need to do assessments
- */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -100,12 +94,6 @@ public class CourseController  extends AppCompatActivity {
 
         courseMentor = new CourseMentor();
         courseValues = datasource.getAllCourses();
-        for (Course course : courseValues){
-            String tmp = course.getTitle() + ", " + course.getTermID() + ", " + course.getCourseID() + ", " + course.getAnticipatedEndDate();
-            Log.d("CourseListTest",tmp);
-        }
-
-        Log.d("ListCourseEnd","End Of Course List Test");
         intent = getIntent();
 
         isNew = intent.getBooleanExtra("isNew", true);
@@ -116,18 +104,7 @@ public class CourseController  extends AppCompatActivity {
             courseID = intent.getLongExtra("courseID", 0L);
             for (Course course : courseValues){
                 if (course.getCourseID().equals(courseID)){
-                    /*
-                    EditText edit = (EditText)findViewById(R.id.editTermName);
-            edit.setText(intent.getStringExtra("title"));
-            edit = (EditText)findViewById(R.id.editStartDate);
-            edit.setText(intent.getStringExtra("startDate"));
-            edit = (EditText)findViewById(R.id.editEndDate);
-            edit.setText(intent.getStringExtra("endDate"));
-                    //editCourseTitle
-        //editStartDate
-        //editEndDate
-        //editCourseStatus
-                     */
+
                     EditText edit = (EditText)findViewById(R.id.editCourseTitle);
                     edit.setText(course.getTitle());
                     edit = (EditText)findViewById(R.id.editEndDate);
@@ -147,13 +124,6 @@ public class CourseController  extends AppCompatActivity {
             btnDeleteCourse.setEnabled(true);
         }
 
-
-
-
-        Log.d("ListCourseEnd","End Of Course List Test");
-
-
-
         btnSave = (Button) findViewById(R.id.btnSave);
 
         btnSave.setOnClickListener(new View.OnClickListener() {
@@ -164,8 +134,6 @@ public class CourseController  extends AppCompatActivity {
 
             }
         });
-
-
 
         btnSaveCourseMentor = (Button) findViewById(R.id.btnSaveCourseMentor);
 
@@ -247,7 +215,6 @@ public class CourseController  extends AppCompatActivity {
         menu.findItem(R.id.save_submit).setVisible(false);
         menu.findItem(R.id.delete_term).setVisible(false);
         menu.findItem(R.id.add_course).setVisible(false);
-
         menu.findItem(R.id.set_course_alarm).setVisible(true);
         menu.findItem(R.id.send_note).setVisible(true);
         menu.findItem(R.id.set_assessment_alarm).setVisible(true);
@@ -258,14 +225,12 @@ public class CourseController  extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            // action with ID action_refresh was selected
             case R.id.set_course_alarm:
                 setCourseAlarm();
                 break;
             case R.id.send_note:
                 sendNote();
                 break;
-            // action with ID action_settings was selected
             case R.id.set_assessment_alarm:
                 setAssessmentAlarm();
                 break;
@@ -290,7 +255,6 @@ public class CourseController  extends AppCompatActivity {
             EditText editGoalDate = (EditText) findViewById(R.id.editGoalDate);
 
             String goalDate = editGoalDate.getText().toString();
-            Log.d("assessment", "setAssessmentAlarm: is not null " + goalDate);
             AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
 
             Intent notificationIntent = new Intent(CourseController.this, AssessmentGoalAlarmReceiver.class);
@@ -307,16 +271,13 @@ public class CourseController  extends AppCompatActivity {
             }
 
             cal.add(Calendar.DAY_OF_MONTH,-7);
-
             alarmManager.setExact(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(), broadcast);
         }
-
         String msg = "Assessment alarm saved.";
         Toast.makeText(getBaseContext(), msg, Toast.LENGTH_SHORT).show();
     }
 
     void deleteCourse(){
-
         Intent intent = new Intent();
         setResult(RESULT_OK, intent);
         datasource.deleteCourse(courseID);
@@ -326,31 +287,16 @@ public class CourseController  extends AppCompatActivity {
     }
 
     void setCourseAlarm(){
-
         if (isNew){
             String msg = "Error: Please save the course before attempting to schedule the notification.";
-
             Toast.makeText(getBaseContext(), msg, Toast.LENGTH_SHORT).show();
         }else if (!isNew) {
             //start
             String startDate = courseStartDate.getText().toString();
-            String[] parseStart = startDate.split("/");
-            String startMonthString = parseStart[0];
-            int startMonth = Integer.parseInt(startMonthString);
-            String startDayString = parseStart[1];
-            int startDay = Integer.parseInt(startDayString);
-            String startYearString = parseStart[2];
-            int startYear = Integer.parseInt(startYearString);
 
-            Log.d("CourseStart", "setCourseAlarm: " + startMonth + ", " + startDay + ", " + startYear);
 
             AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-
-            //Intent notificationIntent = new Intent("android.media.action.DISPLAY_COURSE_START");
             Intent notificationIntent = new Intent(CourseController.this, CourseStartAlarmReceiver.class);
-            //intent.setAction("android.media.action.DISPLAY_COURSE_START");
-            //notificationIntent.addCategory("android.intent.category.DEFAULT");
-            //intent.addCategory("android.intent.category.DEFAULT");
 
             String parseString = String.valueOf(courseID);
             int requestCode = Integer.parseInt(parseString);
@@ -366,19 +312,13 @@ public class CourseController  extends AppCompatActivity {
             cal.add(Calendar.DAY_OF_MONTH,-7);
             alarmManager.setExact(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(), broadcast);
 
-
-            //courseEnd
-
             String endDate = courseEndDate.getText().toString();
-
 
             AlarmManager alarmEndManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
 
             Intent notificationEndIntent = new Intent(CourseController.this, CourseEndAlarmReceiver.class);
-            //Intent notificationEndIntent = new Intent(this, CourseEndAlarmReceiver.class);
             notificationEndIntent.setAction("android.media.action.DISPLAY_COURSE_END");
             notificationEndIntent.addCategory("android.intent.category.DEFAULT");
-
 
             PendingIntent endBroadcast = PendingIntent.getBroadcast(this, requestCode, notificationEndIntent, 0);
 
@@ -391,8 +331,6 @@ public class CourseController  extends AppCompatActivity {
 
             endCal.add(Calendar.DAY_OF_MONTH,-7);
             alarmEndManager.setExact(AlarmManager.RTC_WAKEUP, endCal.getTimeInMillis(), endBroadcast);
-
-
 
             String msg = "Course alarms saved.";
             Toast.makeText(getBaseContext(), msg, Toast.LENGTH_SHORT).show();
@@ -506,7 +444,6 @@ public class CourseController  extends AppCompatActivity {
 
     void sendNote(  ){
 
-
         EditText editNotes = (EditText) findViewById(R.id.editNote);
         String notes = editNotes.getText().toString();
         EditText editCourseTitle = (EditText) findViewById(R.id.editCourseTitle);
@@ -522,15 +459,11 @@ public class CourseController  extends AppCompatActivity {
 
     void setAssessmentArrayList(){
         assessmentValues = datasource.getAllAssessments(courseID);
-        for (Assessment assessment : assessmentValues){
-            String tmp = assessment.getTitle() + ", " + assessment.getCourseID() + ", " + "courseId = " + courseID + assessment.getAssessmentType();
-            Log.d("AssessmentListTest",tmp);
-        }
+
         assessmentArray = new String[assessmentValues.size()];
         for(int i = 0; i < assessmentValues.size(); i++) {
             assessmentArray[i] = assessmentValues.get(i).getTitle();
         }
-        Log.d("AssessmentTest", "setAssessmentArrayList: 1, " + assessmentArray.length);
         assessmentListView = (ListView)findViewById(R.id.listAssessments);
         assessmentArrayAdapter = new ArrayAdapter<String>(this,R.layout.activity_listview, R.id.textView, assessmentArray);
         assessmentListView.setAdapter(assessmentArrayAdapter);
@@ -546,7 +479,6 @@ public class CourseController  extends AppCompatActivity {
             edit.setText(courseMentor.getEmailAddress());
             edit = (EditText)findViewById(R.id.editCourseMentorPhone);
             edit.setText(courseMentor.getPhoneNumber());
-
         }
 
     }
@@ -555,29 +487,20 @@ public class CourseController  extends AppCompatActivity {
 
         List<Note> notes = datasource.getAllNotes();
         if (!notes.isEmpty()){
-            Log.d("Note", "loadNote: Is not empty");
-            Log.d("Note", "notes.size = " + notes.size());
 
             int tmpInt = 0;
             for(int i = 0; i <= notes.size()-1; i++) {
                 tmpInt = i;
 
-                Log.d("Note", "tmpInt = " + tmpInt);
-                //if (String.valueOf(notes.get(tmpInt).getNote_CourseID()).equals(courseID.toString())) {
-                //String tmpString = notes.get(tmpInt).getNote_CourseID();
                 Long tmpLong = notes.get(tmpInt).getNote_CourseID();
-                Log.d("Note", "tmpLong = " + tmpLong + " & courseID = " + courseID + " & note = " + notes.get(tmpInt).getNote());
                 if (tmpLong.equals(courseID)) {
-                        Log.d("Note", "tmpInt = " + tmpInt + " matches courseID");
                     note=notes.get(tmpInt);
                     break;
                 }
             }
         }
         if (note!=null) {
-            Log.d("Note", "note!=null");
             if (!note.getNote().isEmpty()) {
-                Log.d("Note", "Note = " + note.getNote());
                 EditText editNote = (EditText) findViewById(R.id.editNote);
                 editNote.setText(note.getNote().toString());
             }
@@ -596,18 +519,10 @@ public class CourseController  extends AppCompatActivity {
                                         long id) {
                     LinearLayout ll = (LinearLayout) view; // get the parent layout view
                     TextView tv = (TextView) ll.findViewById(R.id.textView); // get the child text view
-                    //final String item = tv.getText().toString() + " int position= " + position;
-                    //final String item = tv.getText().toString() + " int position= " + position;
 
                     assessment = (Assessment) assessmentValues.get(position);
                     loadAssessment();
                     isNewAssessment = false;
-                    //final String item = assessment.getTitle() + " - " + assessment.getTermID();
-                    //String item = ((TextView)view).getText().toString();
-
-                    //Toast.makeText(getBaseContext(), item, Toast.LENGTH_SHORT).show();
-                    //Toast.makeText(getBaseContext(), item, Toast.LENGTH_SHORT).show();
-                    //launchCourseScreen(tmpCourse, position);
                 }
             });
         }
@@ -695,14 +610,6 @@ public class CourseController  extends AppCompatActivity {
         }
 
     }
-/*
-this.assessmentID = 0L;
-        this.dueDate = "";
-        this.goalDate = "";
-        this.courseID = 0L;
-        this.title = "";
-        this.assessmentType = "";
- */
 
     void saveAssessment(){
 
@@ -743,7 +650,6 @@ this.assessmentID = 0L;
         editAssessmentType.setText("");
         editAssessmentDue.setText("");
         editAssessmentGoal.setText("");
-        //assessment = null;
     }
 
     void deleteAssessment(){
@@ -767,17 +673,7 @@ this.assessmentID = 0L;
 
     void addCourse(){
 
-        /*
-        Long termID,
-                           String courseTitle,
-                           String startDate,
-                           String endDate,
-                           String status)
-         */
-        //editCourseTitle
-        //editStartDate
-        //editEndDate
-        //editCourseStatus
+
         if (isNew) {
             EditText edit = (EditText) findViewById(R.id.editCourseTitle);
             String tmpCourseTitle = edit.getText().toString();
@@ -787,7 +683,6 @@ this.assessmentID = 0L;
             String tmpEndDate = edit.getText().toString();
             edit = (EditText) findViewById(R.id.editCourseStatus);
             String tmpCourseStatus = edit.getText().toString();
-
 
             Course tmpCourse = datasource.createCourse(
                     termID,
@@ -808,14 +703,6 @@ this.assessmentID = 0L;
             edit = (EditText) findViewById(R.id.editCourseStatus);
             String tmpCourseStatus = edit.getText().toString();
 
-            /*
-            (Integer courseID,
-                        Integer termID,
-                        String courseTitle,
-                        String startDate,
-                        String endDate,
-                        String status
-             */
             String tmpCourse = courseID.toString();
             Integer tmpCourseInt = Integer.valueOf(tmpCourse);
             String tmpString = termID.toString();

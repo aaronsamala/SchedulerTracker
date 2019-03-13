@@ -1,10 +1,7 @@
 package com.example.schedulertracker;
 
 import android.content.Intent;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -23,13 +20,9 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity{
 
-
-
     private Button btnAddTermButton;
     DBDataSource datasource;
     List<Term> termValues;
-    TermController termController;
-    Term termToPass = new Term();
     private final static int TERM_REQUEST_CODE = 1;
     ListView termListView;
     String[] termArray;
@@ -48,11 +41,6 @@ public class MainActivity extends AppCompatActivity{
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        //termController = new TermController();
-        //termController.setMainActivity(this);
-
-
-
 
         datasource = new DBDataSource(this);
         datasource.open();
@@ -63,49 +51,19 @@ public class MainActivity extends AppCompatActivity{
             public void onClick(View view) { launchTermScreen(); }
         });
 
-        //Add DB stuff 20190210
-
-        //datasource.createTerm("TermTest");
-
-        //datasource.createTerm("TermTest", "testStartDate", "testEndDate");
-
         termValues = datasource.getAllTerms();
 
-        /*
-        Term tmpTerm = new Term();
-        tmpTerm.setTitle("TESTTITLE");
-        tmpTerm.setStartDate("TESTstart");
-        tmpTerm.setEndDate("TESTend");
-        //addTerm(tmpTerm);
-        for (Term term : termValues)
-        {
-            String tmp = term.getTitle() + ", " + term.getTermID() + ", " + term.getStartDate() + ", " + term.getEndDate();
-            Log.d("ListTest",tmp);
-            //datasource.deleteTerm(term);
-
-        }
-        Log.d("ListTestEnd","End Of List Test");
-        */
-
-        //start
-        //String[] courses = new String[] {"C169", "C188", "C196", "C482", "EDV1", "TXC1", "TXP1", "TYC1", "TYP1"};
         setTermList();
 
         termListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position,
                                     long id) {
-                LinearLayout ll = (LinearLayout) view; // get the parent layout view
-                TextView tv = (TextView) ll.findViewById(R.id.textView); // get the child text view
-                //final String item = tv.getText().toString() + " int position= " + position;
-                //final String item = tv.getText().toString() + " int position= " + position;
+                LinearLayout ll = (LinearLayout) view;
+                TextView tv = (TextView) ll.findViewById(R.id.textView);
 
                 Term tmpTerm = (Term) termValues.get(position);
                 final String item = tmpTerm.getTitle() + " - " + tmpTerm.getTermID();
-                //String item = ((TextView)view).getText().toString();
-
-                //Toast.makeText(getBaseContext(), item, Toast.LENGTH_SHORT).show();
-                //Toast.makeText(getBaseContext(), item, Toast.LENGTH_SHORT).show();
                 launchTermScreen(tmpTerm, position);
 
             }
@@ -143,17 +101,14 @@ public class MainActivity extends AppCompatActivity{
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent dataIntent) {
         super.onActivityResult(requestCode, resultCode, dataIntent);
-        Log.d("ActResult", "Started");
         switch (requestCode)
         {
-            // This request code is set by startActivityForResult(intent, REQUEST_CODE_1) method.
             case TERM_REQUEST_CODE:
-                //TextView textView = (TextView)findViewById(R.id.resultDataTextView);
+
                 if(resultCode == RESULT_OK)
                 {
                     boolean isNew = dataIntent.getBooleanExtra("isNew", true);
                     if (isNew) {
-                        Log.d("ActResult", "Received");
                         String termTitle = dataIntent.getStringExtra("termTitle");
                         String termStartDate = dataIntent.getStringExtra("termStartDate");
                         String termEndDate = dataIntent.getStringExtra("termEndDate");
@@ -161,16 +116,12 @@ public class MainActivity extends AppCompatActivity{
                         term.setTitle(termTitle);
                         term.setStartDate(termStartDate);
                         term.setEndDate(termEndDate);
-                        //termArrayAdapter.add(termTitle);
                         termValues.add(term);
                         setTermList();
                         addTerm(term);
-                        //textView.setText(messageReturn);
                     }else if (!isNew) {
                         String action = dataIntent.getStringExtra("action");
-                        Log.d("actionEquals", action);
                         if (action.equals("modify")){
-                            Log.d("ActResult", "Received_!isNew");
                             String termTitle = dataIntent.getStringExtra("termTitle");
                             String termStartDate = dataIntent.getStringExtra("termStartDate");
                             String termEndDate = dataIntent.getStringExtra("termEndDate");
@@ -181,14 +132,11 @@ public class MainActivity extends AppCompatActivity{
                             term.setStartDate(termStartDate);
                             term.setEndDate(termEndDate);
                             term.setTermID(termID);
-                            //termArrayAdapter.add(termTitle);
                             termValues.remove(position);
                             termValues.add(position, term);
                             setTermList();
                             modTerm(term);
-                            //textView.setText(messageReturn);
                         } else if (action.equals("delete")){
-                            Log.d("ActResult", "Received_!isNewDelete");
                             Long termID = dataIntent.getLongExtra("termID", 999);
                             int position = dataIntent.getIntExtra("position", 999);
                             datasource.deleteTerm(termID);
@@ -202,66 +150,37 @@ public class MainActivity extends AppCompatActivity{
     }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-
 
         return super.onOptionsItemSelected(item);
     }
 
     void addTerm(Term term){
         datasource.createTerm(term.getTitle(), term.getStartDate(), term.getEndDate());
-        String tmp = term.getTitle() + ", " + term.getTermID() + ", " + term.getStartDate();
-        Log.d("AddedTerm",tmp);
     }
     void modTerm(Term term){
         String tmpString = term.getTermID().toString();
         Integer tmpInteger = Integer.valueOf(tmpString);
         datasource.modTerm(tmpInteger, term.getTitle(), term.getStartDate(), term.getEndDate());
-        String tmp = term.getTitle() + ", " + term.getTermID() + ", " + term.getStartDate();
-        Log.d("moddedTerm",tmp);
     }
-
-    /*
-    void setTermController(TermController termController){
-        this.termController = termController;
-    }
-    */
 
     @Override
     protected void onResume() {
         datasource.open();
 
         termValues = datasource.getAllTerms();
-        /*
-        for (Term term : termValues)
-        {
-            String tmp = term.getTitle() + ", " + term.getTermID() + ", " + term.getStartDate() + ", " + term.getEndDate();
-            Log.d("ListTest",tmp);
-            //datasource.deleteTerm(term);
-
-        }
-        Log.d("ListTestEnd","End Of List Test_Redo");
-
-        */
 
         super.onResume();
     }
 
     @Override
     protected void onPause() {
-        //datasource.close();
         super.onPause();
     }
 }
