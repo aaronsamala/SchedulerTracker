@@ -246,8 +246,9 @@ public class CourseController  extends AppCompatActivity {
     }
     void setAssessmentAlarm(){
 
+
         if (isNewAssessment){
-            String msg = "Error: Please save the assessment before attempting to schedule the notification.";
+            String msg = "Error: Please save the assessment or select an existing assessment before attempting to schedule the notification.";
 
             Toast.makeText(getBaseContext(), msg, Toast.LENGTH_SHORT).show();
         } else if (!isNewAssessment){
@@ -272,9 +273,12 @@ public class CourseController  extends AppCompatActivity {
 
             cal.add(Calendar.DAY_OF_MONTH,-7);
             alarmManager.setExact(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(), broadcast);
+            String msg = "Assessment alarm saved.";
+            Toast.makeText(getBaseContext(), msg, Toast.LENGTH_SHORT).show();
+            saveAssessment();
+            setAssessmentArrayList();
         }
-        String msg = "Assessment alarm saved.";
-        Toast.makeText(getBaseContext(), msg, Toast.LENGTH_SHORT).show();
+
     }
 
     void deleteCourse(){
@@ -469,6 +473,7 @@ public class CourseController  extends AppCompatActivity {
         assessmentListView.setAdapter(assessmentArrayAdapter);
         ListView list = (ListView) findViewById(R.id.listAssessments);
         setListViewHeightBasedOnChildren(list);
+        loadAssessments();
     }
     void loadCourseMentor(){
         courseMentor = datasource.getCourseMentor(courseID);
@@ -639,7 +644,7 @@ public class CourseController  extends AppCompatActivity {
 
             datasource.modAssessment(assessment.getAssessmentID(), courseID, title, type, dueDate, goalDate);
         }
-        isNewAssessment = false;
+        isNewAssessment = true;
         String msg = "Assessment saved.";
         Toast.makeText(getBaseContext(), msg, Toast.LENGTH_SHORT).show();
         EditText editAssessmentTitle = (EditText) findViewById(R.id.editAssessmentTitle);
