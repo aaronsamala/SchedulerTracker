@@ -11,4 +11,10 @@
     <string name="cancel">Cancel</string>
     <string name="Save">Save</string>
     <string name="save_and_exit"><![CDATA[Save & Exit]]></string>
+    <string name="channel_name_crs_start">course start notification channel</string>
+    <string name="channel_description_crs_start">course start notification channel description</string>
+    <string name="channel_name_crs_end">course end notification channel</string>
+    <string name="channel_description_crs_end">course end notification channel description</string>
+    <string name="channel_name_asess_goal">assessment goal notification channel</string>
+    <string name="channel_description_asess_goal">assessment goal notification channel description</string>
 </resources>
