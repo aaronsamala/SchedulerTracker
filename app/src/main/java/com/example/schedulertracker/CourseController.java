@@ -274,7 +274,7 @@ public class CourseController  extends AppCompatActivity {
             cal.add(Calendar.DAY_OF_MONTH,-7);
             alarmManager.setExact(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(), broadcast);
             String msg = "Assessment alarm saved.";
-            Toast.makeText(getBaseContext(), msg, Toast.LENGTH_SHORT).show();
+            Toast.makeText(getBaseContext(), msg, Toast.LENGTH_LONG).show();
             saveAssessment();
             setAssessmentArrayList();
         }
